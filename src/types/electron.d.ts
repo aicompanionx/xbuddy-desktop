@@ -1,83 +1,74 @@
+// Define ElectronAPI interface in global scope
 interface ElectronAPI {
     // Notification related
-    sendNotification: (title: string, body: string, route: string) => void;
+    sendNotification: (options: { title: string; body: string; route?: string }) => void;
     onNotificationClick: (callback: (route: string) => void) => void;
     removeNotificationListeners: () => void;
 
     // Multi-window management
-    createWindow: (options: {
-        name: string,
-        width?: number,
-        height?: number,
-        url?: string
-    }) => Promise<number>;
+    createWindow: (options: { name: string; width?: number; height?: number; url?: string }) => Promise<number>;
     onWindowId: (callback: (windowId: string) => void) => () => void;
     getAllWindows: () => Promise<string[]>;
     sendMessageToWindow: (windowId: string, channel: string, data: any) => void;
+    sendToWindow: (options: { windowId: number; channel: string; data: any }) => void;
     onWindowMessage: (channel: string, callback: (data: any) => void) => () => void;
     getWindowType: () => Promise<string>;
     
     // Live2D window
-    createLive2DWindow: (options: {
-        width?: number,
-        height?: number,
-        hash?: string
-    }) => Promise<number>;
+    createLive2DWindow: (options: { width: number; height: number; hash?: string }) => Promise<number>;
+    setWindowPosition: (options: { windowId: number; x: number; y: number }) => void;
 
     // Automation related
-    captureScreen: () => Promise<{ success: boolean; path?: string; error?: string }>;
-    moveMouse: (x: number, y: number) => Promise<{ success: boolean; error?: string }>;
-    clickMouse: (x: number, y: number, doubleClick?: boolean) => Promise<{ success: boolean; error?: string }>;
-    typeText: (text: string) => Promise<{ success: boolean; error?: string }>;
-    pressKey: (keyName: string) => Promise<{ success: boolean; error?: string }>;
+    startAutomation: (options: any) => Promise<any>;
+    stopAutomation: () => Promise<any>;
+    getAutomationStatus: () => Promise<any>;
+    executeGuiAction: (action: string) => Promise<{ success: boolean; message: string }>;
+    processGuiAction: (task: string, systemPrompt: string, actionHistory?: string[]) => Promise<{ success: boolean; thought?: string; action?: string; error?: string }>;
 
     // Vision analysis related
-    setAIModelConfig: (config: {
-        provider: 'openai' | 'huggingface';
-        apiKey: string;
-        baseURL?: string;
-        modelName?: string;
-    }) => Promise<{ success: boolean; error?: string }>;
-    analyzeScreenshot: (prompt?: string) => Promise<{ success: boolean; result?: string; error?: string }>;
-    processInstruction: (instruction: string) => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
-        actions?: Array<{
-            type: string;
-            x?: number;
-            y?: number;
-            doubleClick?: boolean;
-            text?: string;
-            keyName?: string;
-            description?: string;
-        }>;
-    }>;
+    analyzeScreenshot: (options?: any) => Promise<any>;
+    findElementByImage: (options: any) => Promise<any>;
+    setAIModelConfig: (config: { provider: string; apiKey: string; baseURL?: string; modelName?: string }) => Promise<{ success: boolean; error?: string }>;
+    setOpenAIConfig: (config: { apiKey: string; baseURL?: string }) => Promise<{ success: boolean; error?: string }>;
     
-    // GUI agent related
-    processGuiAction: (
-        task: string,
-        systemPrompt: string,
-        actionHistory?: string[]
-    ) => Promise<{
-        success: boolean;
-        thought?: string;
-        action?: string;
-        error?: string;
-    }>;
-    executeGuiAction: (actionText: string) => Promise<{
-        success: boolean;
-        message: string;
-    }>;
+    // Legacy API (Vision and automation)
+    processInstruction: (instruction: string) => Promise<any>;
+    captureScreen: () => Promise<any>;
+    moveMouse: (x: number, y: number) => Promise<any>;
+    clickMouse: (x: number, y: number, doubleClick?: boolean) => Promise<any>;
+    typeText: (text: string) => Promise<any>;
+    pressKey: (keyName: string) => Promise<any>;
+    convertImageToBase64: (filePath: string) => Promise<any>;
 
     // Image conversion
-    convertImageToBase64: (filePath: string) => Promise<{
-        success: boolean;
-        base64Data?: string;
-        error?: string;
+    captureScreenshot: () => Promise<string>;
+
+    // Browser Monitor API
+    startBrowserMonitoring: () => Promise<{ success: boolean; message: string }>;
+    stopBrowserMonitoring: () => Promise<{ success: boolean; message: string }>;
+    getBrowserMonitoringStatus: () => Promise<{ isRunning: boolean }>;
+    onBrowserData: (callback: (data: any) => void) => () => void;
+
+    // URL Safety API
+    checkUrlSafety: (url: string) => Promise<{
+        url: string;
+        isSafe: boolean;
+        riskScore?: number;
+        category?: string;
+        reason?: string;
+        timestamp: number;
     }>;
+    clearUrlSafetyCache: () => Promise<{ success: boolean; message?: string; error?: string }>;
+
+    // Phishing detection
+    onUnsafeUrlDetected: (callback: (result: any) => void) => () => void;
 }
 
-interface Window {
-    electronAPI: ElectronAPI;
+// Extend Window interface globally
+declare global {
+    interface Window {
+        electronAPI: ElectronAPI;
+    }
 }
+
+export { };
