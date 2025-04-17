@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electron + React 应用</title>
+
+    <script src="/assets/js/live2d.min.js"></script>
+    <script src="/assets/js/pixi.min.js"></script>
+    <script src="/assets/js/live2d_cubism_core.min.js"></script>
+    <script src="/assets/js/pixi_live2d_display.min.js"></script>
+    
+    <style>
+      /* 确保透明窗口的样式 */
+      html, body {
+        background-color: transparent !important;
+      }
+      
+      /* 为Live2D路由设置特殊样式 */
+      html[data-route="/live2d"] #root,
+      html[data-route="live2d"] #root {
+        background-color: transparent !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/renderer.tsx"></script>
+    <script>
+      // 设置当前路由属性，帮助CSS识别
+      document.addEventListener('DOMContentLoaded', () => {
+        const updateRouteAttribute = () => {
+          const route = window.location.hash.replace('#', '') || '/';
+          document.documentElement.setAttribute('data-route', route);
+        };
+        
+        // 初始化时设置
+        updateRouteAttribute();
+        
+        // 路由变化时更新
+        window.addEventListener('hashchange', updateRouteAttribute);
+      });
+    </script>
+  </body>
+</html>

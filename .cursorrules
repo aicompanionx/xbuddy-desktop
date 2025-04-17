@@ -1,0 +1,145 @@
+---
+description: Enforces best practices, coding standards, and performance considerations for Electron+React_v19 development with TailwindCSS_v4.1, shadcn@latest UI, and React Query. Covers code structure, security, testing, and common pitfalls to ensure robust and maintainable applications.
+globs: **/*.{js,jsx,ts,tsx,html,css,scss,mjs,cjs}
+---
+
+# Project Configuration
+
+- Use pnpm as the package manager, ensure `node-linker=hoisted` is set in .npmrcfile for compatibility with Electron Forge
+- Always use the latest stable version of Electron to receive security fixes andperformance improvements
+- Use TypeScript for strong typing support with appropriate tsconfig.jsonconfiguration
+- Use Vite as the build tool, leveraging its fast hot reload capabilities
+- Run `pnpm lint` to detect code style issues
+- Use English
+
+- **Code Organization and Structure**
+  - **Directory Structure:**
+    - Follow this project structure:
+
+      electron-app/
+      ├── src/
+      │   ├── main.ts         # Main process entry point
+      │   ├── preload.ts      # Preload script
+      │   ├── renderer.tsx    # Renderer process entry
+      │   ├── components/     # React components
+      │   │   ├── ui/         # Base UI components (shadcn)
+      │   │   └── features/   # Feature components
+      │   ├── hooks/          # Custom hooks
+      │   ├── lib/            # Utility functions and libraries
+      │   ├── api/            # API requests and React Query hooks
+      │   ├── styles/         # Global styles and Tailwind config
+      │   └── assets/         # Static assets
+      ├── index.html          # Main HTML file
+      ├── package.json
+      ├── tsconfig.json
+      ├── tailwind.config.js  # Tailwind configuration
+      └── forge.config.ts     # Electron Forge configuration
+
+    - Organize code into modules by functionality (e.g., authentication, data handling, UI components)
+  - **File Naming Conventions:**
+    - All filenames should use kebab-case, e.g., `user-profile.tsx`, `api-client.ts`
+    - Directory names should also use kebab-case, e.g., `user-authentication/`
+    - Component files should be named according to their functionality, e.g., `data-table.tsx`
+    - Hook files should use the `use-` prefix, e.g., `use-auth.ts`
+
+- **Styling and UI Components**
+  - **Tailwind CSS:**
+    - Follow the Tailwind CSS v4.1 specification
+    - Prefer Tailwind's utility classes over writing custom CSS
+    - Carefully follow the official subject variable declaration reference documentation: [https://tailwindcss.com/docs/theme#theme-variable-namespaces]
+    - Follow Tailwind's naming conventions
+    - Use Tailwind's theme configuration to manage colors, fonts, and other design tokens
+    - Create reusable component styles using the `@apply` directive
+  - **shadcn UI:**
+    - Use and extend shadcn UI components, maintaining consistent UI style
+    - When creating custom variants for shadcn components, follow their design style
+    - Component files should be placed in the `components/ui` directory
+    - Use shadcn's CLI tool to add new components: `npx shadcn-ui add [component-name]`
+  - **Responsive Design:**
+    - Use Tailwind's responsive prefixes (`sm:`, `md:`, `lg:`) to implement mobile-first responsive design
+    - Test UI appearance on different screen sizes
+
+- **Data Fetching and State Management**
+  - **React Query:**
+    - Use `@tanstack/react-query` for handling all API requests
+    - Organize query hooks by functionality, placed in the `src/api` directory
+    - Follow naming conventions: `use-xxx-query.ts`, `use-xxx-mutation.ts`
+    - Leverage React Query's caching and invalidation mechanisms to improve performance
+    - Configure retries, cache times, and loading states appropriately
+  - **API Layer Organization:**
+    - Create a centralized API client for basic request handling
+    - Separate API request logic from UI components
+    - Use React Query's prefetching capabilities to enhance user experience
+  - **State Management:**
+    - Use React's useState and useReducer for local state
+    - Use useContext or React Query's query cache for sharing state between components
+    - Consider using Zustand or Jotai for complex global state
+
+- **Best Practices**
+  - **Main Process/Renderer Process Communication:**
+    - Use `ipcRenderer` and `ipcMain` for inter-process communication, avoid using the deprecated `remote` module
+    - Safely expose APIs to the renderer process through `contextBridge`
+    - Validate and sanitize all data passed via IPC
+  - **Code Patterns:**
+    - Use React functional components and Hooks
+    - Prefer composition over inheritance
+    - Avoid long-running tasks in the renderer process, move them to the main process or use Web Workers
+    - Use the Es6 + syntax and use as many arrow functions as possible
+  - **Error Handling:**
+    - Use React Query's error handling mechanisms to display API errors
+    - Implement unified error boundary components to catch UI rendering errors
+    - Use try-catch blocks to handle exceptions and prevent crashes
+    - Log errors to a file or remote logging service for debugging
+
+- **Performance Optimization**
+  - **Rendering Optimization:**
+    - If you can't use React as a prefix, don't use it, such as memo instead of React.memo
+    - Use `memo`, `useCallback`, and `useMemo` to reduce unnecessary re-renders
+    - Properly configure React Query's `staleTime` and `cacheTime`
+    - Avoid excessive use of dynamic inline styles, prefer Tailwind class names
+  - **Code Splitting:**
+    - Use React's `React.lazy` and `Suspense` for component lazy loading
+    - Split code by route or functionality
+  - **Image Optimization:**
+    - Use appropriate image formats (WebP, SVG) and compression techniques
+    - Consider implementing image lazy loading
+
+- **Security Best Practices**
+  - **Context Isolation:**
+    - Enable context isolation for the renderer process to prevent access to the main process's JavaScript context
+    - Disable Node.js integration in the renderer process unless strictly necessary
+    - Use contextBridge to safely expose a limited API
+  - **Input Validation:**
+    - Use Zod or Yup to validate all user inputs and API responses
+    - Validate all data received from the renderer process in the main process
+  - **Secure Communication:**
+    - Use HTTPS for all API communications
+    - Implement appropriate authentication and authorization mechanisms
+
+- **Testing Approaches**
+  - **Unit Testing:**
+    - Write unit tests using Vitest
+    - Test React components using React Testing Library
+    - Write tests for React Query hooks, using `QueryClientProvider` to mock data
+  - **Component Testing:**
+    - Write tests for shadcn UI components to ensure custom behaviors work correctly
+    - Use mock server (MSW) to simulate API responses
+  - **End-to-End Testing:**
+    - Write end-to-end tests using Playwright or Cypress
+  - **Test Organization:**
+    - Place test files in the same directory as the files being tested, named as `[component-name].test.tsx`
+    - Use descriptive test names to clearly identify the purpose of each test
+
+- **Tooling and Environment**
+  - **Recommended Development Tools:**
+    - Visual Studio Code or Cursor as code editors
+    - Tailwind CSS plugins and Tailwind CSS IntelliSense
+    - Electron Forge for packaging and distributing applications
+    - Chrome DevTools for debugging the renderer process
+  - **Build Configuration:**
+    - Configure Tailwind CSS to optimize CSS bundle size for production
+    - Use Vite to bundle application code
+    - Configure the build system to optimize code for production
+  - **Pre-commit Tools:**
+    - Use husky and lint-staged to run linters and tests before commits
+    - Use prettier for automatic code formatting

@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.278 0.028 256.85);
+
+  --color-mint-500: oklch(0.72 0.11 178);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.278 0.028 256.85);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.278 0.028 256.85);
+
+  --color-primary-500: oklch(0.57 0.23 262.63);
+  --color-primary-foreground: oklch(0.98 0.005 240);
+
+  --color-secondary-500: oklch(0.96 0.02 240);
+  --color-secondary-foreground: oklch(0.32 0.017 256.8);
+
+  --color-muted-500: oklch(0.96 0.02 240);
+  --color-muted-foreground: oklch(0.64 0.042 252.45);
+
+  --color-accent-500: oklch(0.96 0.02 240);
+  --color-accent-foreground: oklch(0.32 0.017 256.8);
+
+  --color-destructive-500: oklch(0.67 0.24 22.78);
+  --color-destructive-foreground: oklch(0.98 0.005 240);
+
+  --border: oklch(0.89 0.02 248.31);
+  --input: oklch(0.89 0.02 248.31);
+  --ring: oklch(0.57 0.23 262.63);
+
+  --radius: 0.5rem;
+}
+
+@theme dark {
+  --background: oklch(0.278 0.028 256.85);
+  --foreground: oklch(0.98 0.005 240);
+
+  --card: oklch(0.278 0.028 256.85);
+  --card-foreground: oklch(0.98 0.005 240);
+
+  --popover: oklch(0.278 0.028 256.85);
+  --popover-foreground: oklch(0.98 0.005 240);
+
+  --color-primary-500: oklch(0.61 0.255 262.15);
+  --color-primary-foreground: oklch(0.32 0.017 256.8);
+
+  --color-secondary-500: oklch(0.36 0.048 255.09);
+  --color-secondary-foreground: oklch(0.98 0.005 240);
+
+  --color-muted-500: oklch(0.36 0.048 255.09);
+  --color-muted-foreground: oklch(0.71 0.043 255.74);
+
+  --color-accent-500: oklch(0.36 0.048 255.09);
+  --color-accent-foreground: oklch(0.98 0.005 240);
+
+  --color-destructive-500: oklch(0.4 0.15 22.78);
+  --color-destructive-foreground: oklch(0.98 0.005 240);
+
+  --border: oklch(0.36 0.048 255.09);
+  --input: oklch(0.36 0.048 255.09);
+  --ring: oklch(0.54 0.23 262.65);
+}
+
+@layer utilities {
+  * {
+    border: 0;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: Inter, system-ui, sans-serif;
+  }
+  
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+#root {
+  @apply w-full h-full;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 简化body样式 */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  
+  .read-the-docs {
+    color: #555;
+  }
+} 
