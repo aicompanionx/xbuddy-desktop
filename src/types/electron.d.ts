@@ -42,6 +42,7 @@ interface HttpAPI {
     ) => Promise<ApiResponse<T>>;
 }
 
+
 interface ElectronAPI {
     // Notification related
     sendNotification: (title: string, body: string, route: string) => void;
@@ -59,7 +60,7 @@ interface ElectronAPI {
     toggleIgnoreMouseEvents: (options: {
         ignore: boolean;
         windowId: string;
-        forward?: boolean;
+        forward: boolean;
     }) => void;
     moveWindow: (options: { windowId: string; x: number; y: number }) => void;
 
@@ -116,6 +117,8 @@ interface ElectronAPI {
 
 // Extend Window interface globally
 declare global {
+    type PixiApp = any
+
     interface Window {
         electronAPI: ElectronAPI;
         model?: Live2DModel; // Live2D model object

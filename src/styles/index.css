@@ -97,7 +97,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 简化body样式 */
 body {
   margin: 0;
   min-width: 320px;

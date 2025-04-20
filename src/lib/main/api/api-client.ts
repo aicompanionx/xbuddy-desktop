@@ -292,9 +292,6 @@ const xbuddyClient = new ApiClient({
     baseUrl: process.env.XBUDDY_API
 });
 
-console.log('process.env.XBUDDY_API', process.env.XBUDDY_API);
-
-
 const xbuddyAiClient = new ApiClient({
     baseUrl: process.env.XBUDDY_AI_API
 });

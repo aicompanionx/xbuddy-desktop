@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react'
 import { Live2DModel } from 'pixi-live2d-display'
 import { WINDOWS_ID } from '@/constants/windowsId'
 
-type PixiApp = any
 type ModelCleanupFn = () => void
 
 interface UseLive2DModelProps {
@@ -120,8 +119,6 @@ export function useLive2DModel({
   const modelRef = useRef<Live2DModel | null>(null)
   const cleanupFnRef = useRef<ModelCleanupFn | null>(null)
   const dimensionsChangedRef = useRef(false)
-  const isDraggingRef = useRef(false)
-  const initialMousePositionRef = useRef({ x: 0, y: 0 })
   const initialWindowPositionRef = useRef({ x: 0, y: 0 })
   const windowPositionRef = useRef({ x: 0, y: 0 })
 
@@ -276,101 +273,6 @@ export function useLive2DModel({
     }
   }, []);
 
-  // Handle mouse interactions for dragging
-  useEffect(() => {
-    // Start dragging when mouse is pressed on canvas
-    const handleMouseDown = (e: MouseEvent) => {
-      if (e.target === canvasRef.current) {
-        isDraggingRef.current = true;
-
-        // Store initial mouse position
-        initialMousePositionRef.current = { x: e.screenX, y: e.screenY };
-
-        // Get the latest window position when dragging starts
-        window.electronAPI.getWindowPosition(WINDOWS_ID.MAIN)
-          .then((position) => {
-            if (position) {
-              initialWindowPositionRef.current = position;
-              windowPositionRef.current = position;
-            }
-          })
-          .catch((error) => {
-            console.error('Failed to get window position:', error);
-          });
-
-        // Ensure mouse events are forwarded
-        window.electronAPI.toggleIgnoreMouseEvents({
-          ignore: false,
-          windowId: WINDOWS_ID.MAIN,
-          forward: true
-        });
-      }
-    };
-
-    // Handle mouse movement - directly set window position based on mouse movement
-    const handleMouseMove = (e: MouseEvent) => {
-      // Toggle mouse event forwarding based on whether mouse is over canvas
-      if (e.target === canvasRef.current) {
-        window.electronAPI.toggleIgnoreMouseEvents({
-          ignore: false,
-          windowId: WINDOWS_ID.MAIN,
-          forward: true
-        });
-      } else {
-        window.electronAPI.toggleIgnoreMouseEvents({
-          ignore: true,
-          windowId: WINDOWS_ID.MAIN,
-          forward: true
-        });
-      }
-
-      // If dragging, update window position directly based on mouse movement
-      if (isDraggingRef.current) {
-        // Calculate the mouse movement delta from the initial position
-        const deltaX = e.screenX - initialMousePositionRef.current.x;
-        const deltaY = e.screenY - initialMousePositionRef.current.y;
-        
-        // Calculate the new absolute window position
-        const newX = initialWindowPositionRef.current.x + deltaX;
-        const newY = initialWindowPositionRef.current.y + deltaY;
-        
-        // Update current window position
-        windowPositionRef.current = { x: newX, y: newY };
-
-        // Set the window position directly to follow mouse movement exactly
-        // The main process will handle keeping the window within screen boundaries
-        window.electronAPI.setWindowPosition({
-          windowId: WINDOWS_ID.MAIN,
-          x: newX,
-          y: newY
-        });
-      }
-    };
-
-    // End dragging when mouse is released
-    const handleMouseUp = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-
-        // Update initial window position for next drag operation
-        initialWindowPositionRef.current = { ...windowPositionRef.current };
-      }
-    };
-
-    // Add event listeners with passive option for better performance
-    if (canvasRef.current) {
-      window.addEventListener('mousedown', handleMouseDown, { passive: true });
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-      window.addEventListener('mouseup', handleMouseUp, { passive: true });
-    }
-
-    // Clean up event listeners
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [canvasRef.current]);
 
   return {
     isLoading,
