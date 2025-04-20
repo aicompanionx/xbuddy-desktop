@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { UrlSafetyResult } from '../lib/api/types';
 
 interface PhishingDetectionResult {
-    unsafeUrlResult: UrlSafetyResult | null;
+    unsafeUrlResult: unknown | null;
     showAlert: boolean;
     setShowAlert: (show: boolean) => void;
     handleCloseAlert: () => void;
@@ -13,14 +12,14 @@ interface PhishingDetectionResult {
  * Subscribe to unsafe URL events from main process
  */
 export const usePhishingDetection = (): PhishingDetectionResult => {
-    const [unsafeUrlResult, setUnsafeUrlResult] = useState<UrlSafetyResult | null>(null);
+    const [unsafeUrlResult, setUnsafeUrlResult] = useState<unknown | null>(null);
     const [showAlert, setShowAlert] = useState<boolean>(false);
 
     useEffect(() => {
         // Define type-safe callback function
-        const handleUnsafeUrl = (result: UrlSafetyResult) => {
+        const handleUnsafeUrl = (result: unknown) => {
             // Show alert for any unsafe URL regardless of risk score
-            if (result && !result.isSafe) {
+            if (result && !result.safe) {
                 setUnsafeUrlResult(result);
                 setShowAlert(true);
             }

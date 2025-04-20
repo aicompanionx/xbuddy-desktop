@@ -24,7 +24,7 @@ export const useAIModelConfig = (initialConfig?: Partial<AIModelConfig>) => {
     // States
     const [provider, setProvider] = useState<ModelProvider>(initialConfig?.provider || 'openai');
     const [apiKey, setApiKey] = useState<string>(initialConfig?.apiKey || 'sk-dYGNH57Caxgu06FuD522Db5cE4E1453aA82bC70eB4230911');
-    const [baseURL, setBaseURL] = useState<string>(initialConfig?.baseURL || 'https://api.vveai.com/v1');
+    const [baseURL, setBaseURL] = useState<string>(initialConfig?.baseURL || 'https://api.aaai.vip/v1');
     const [modelName, setModelName] = useState<string>(initialConfig?.modelName || '');
     const [isConfigured, setIsConfigured] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);

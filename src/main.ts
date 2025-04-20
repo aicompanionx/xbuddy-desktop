@@ -1,53 +1,23 @@
+import './lib/main/init-env';
+
 import { app, BrowserWindow } from 'electron';
-import { createWindow, initWindowManagerIPC } from './lib/service/window-manager';
-import { setupIpcHandlers } from './lib/service/ipc-handler';
-import { setupAutomationHandlers } from './lib/service/automation-service';
-import { setupVisionHandlers } from './lib/service/vision-service';
-import { setupBrowserMonitorHandlers, startBrowserMonitoring } from './lib/service/browser-monitor-service';
-import { setupUrlSafetyHandlers } from './lib/service/url-safety-service';
+import { createWindow, initWindowManagerIPC } from './lib/main/window';
+import { setupIpcHandlers } from './lib/main/ipc-handler';
+import { setupUrlSafetyHandlers } from './lib/main/url-safety-service';
+import { setupBrowserMonitorIPC } from './lib/main/browser-monitor-ipc';
+
+// Configuration
+const AUTO_START_BROWSER_MONITOR = true; // Control whether browser monitoring starts automatically
 
 // Handle squirrel events during installation
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
 
-/**
- * Start browser monitoring and auto-create Live2D character window
- */
-const startAppServices = async () => {
-    console.log('Starting app services...');
-
-    // Start browser monitoring automatically
-    const monitorResult = await startBrowserMonitoring();
-    console.log('Browser monitoring start result:', monitorResult);
-
-    // Delay needed to ensure main window is ready
-    setTimeout(() => {
-        // Get main window
-        const windows = BrowserWindow.getAllWindows();
-        const mainWindow = windows.find(w => w.webContents.getURL().includes('main'));
-
-        if (mainWindow) {
-            // Send command to renderer to create Live2D window
-            console.log('Sending command to create Live2D window');
-            mainWindow.webContents.send('auto-create-live2d');
-        }
-    }, 2000);
-};
-
 // Called when Electron has finished initialization and is ready to create browser windows
 app.whenReady().then(() => {
     // Set up IPC listeners
     setupIpcHandlers();
-    
-    // Set up automation service listeners
-    setupAutomationHandlers();
-    
-    // Set up vision analysis service listeners
-    setupVisionHandlers();
-    
-    // Set up browser monitor service listeners
-    setupBrowserMonitorHandlers();
 
     // Set up URL safety service listeners
     setupUrlSafetyHandlers();
@@ -56,10 +26,10 @@ app.whenReady().then(() => {
     initWindowManagerIPC();
 
     // Create main window
-    createWindow();
+    const mainWindow = createWindow();
 
-    // Start browser monitoring and other services
-    startAppServices();
+    // Set up browser monitor IPC handlers with the main window
+    setupBrowserMonitorIPC(mainWindow, AUTO_START_BROWSER_MONITOR);
 
     // Handle macOS app activation
     app.on('activate', () => {

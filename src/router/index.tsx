@@ -11,31 +11,20 @@ const Router: React.FC = () => {
   return (
     <HashRouter>
       <Routes>
-        {/* Live2D路由单独处理，不使用Layout */}
         <Route path="/live2d" element={<Live2DPage />} />
-        
-        {/* 其他路由使用Layout包装 */}
+
         <Route path="/" element={<Layout />}>
           {routes.map((route) => {
             const RouteComponent = route.component
 
-            // 跳过已经单独处理的live2d路由
             if (route.path === '/live2d') {
               return null
             }
 
             if (route.index) {
-              // For home page, display directly
               return <Route key={route.path} index element={<RouteComponent />} />
             } else {
-              // For other non-home pages, check if we need to display
-              return (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={selectedWindow ? <RouteComponent /> : <Navigate to="/" replace />}
-                />
-              )
+              return <Route key={route.path} path={route.path} element={<RouteComponent />} />
             }
           })}
         </Route>

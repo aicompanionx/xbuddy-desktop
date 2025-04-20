@@ -41,5 +41,25 @@ export const windowApi = {
     // Create Live2D window
     createLive2DWindow: async (options: { width?: number, height?: number }) => {
         return await ipcRenderer.invoke('create-live2d-window', options);
+    },
+
+    // Toggle window mouse event ignoring for click-through functionality
+    toggleIgnoreMouseEvents: (options: { ignore: boolean; windowId: string; forward?: boolean }) => {
+        ipcRenderer.send('toggle-ignore-mouse-events', options);
+    },
+
+    // Move window by delta (for dragging)
+    moveWindow: (options: { windowId: string, x: number, y: number }) => {
+        ipcRenderer.send('move-window', options);
+    },
+
+    // Set absolute window position
+    setWindowPosition: (options: { windowId: string, x: number, y: number }) => {
+        ipcRenderer.send('set-window-position', options);
+    },
+
+    // Get current window position
+    getWindowPosition: async (windowId: string): Promise<{ x: number; y: number }> => {
+        return await ipcRenderer.invoke('get-window-position', { windowId });
     }
 }; 

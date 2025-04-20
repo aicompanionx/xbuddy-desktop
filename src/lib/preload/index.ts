@@ -1,20 +1,21 @@
 import { notificationApi } from './notification-api';
 import { windowApi } from './window-api';
-import { automationApi } from './automation-api';
-import { visionApi } from './vision-api';
-import { imageApi } from './image-api';
-import { browserMonitorApi } from './browser-monitor-api';
 import { urlSafetyApi } from './url-safety-api';
+import { httpApi } from './http-api';
+import { browserMonitorApi } from './browser-monitor-api';
 
-/**
- * Complete API exposed to renderer process by preload script
- */
 export const electronAPI = {
     ...notificationApi,
     ...windowApi,
-    ...automationApi,
-    ...visionApi,
-    ...imageApi,
+    ...urlSafetyApi,
     ...browserMonitorApi,
-    ...urlSafetyApi
+
+    // Map browser monitor API to expected naming convention
+    startBrowserMonitoring: browserMonitorApi.startMonitoring,
+    stopBrowserMonitoring: browserMonitorApi.stopMonitoring,
+    getBrowserMonitoringStatus: browserMonitorApi.getStatus,
+    onBrowserData: browserMonitorApi.onBrowserData,
+    onUnsafeUrlDetected: browserMonitorApi.onUnsafeUrl,
+
+    http: httpApi
 };

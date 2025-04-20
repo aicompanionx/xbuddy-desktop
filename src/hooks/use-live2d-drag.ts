@@ -2,18 +2,18 @@ import { useState, useEffect, RefObject } from 'react'
 
 interface Live2DDragOptions {
   canvasRef: RefObject<HTMLCanvasElement>
-  enabled?: boolean // 添加启用/禁用选项
+  enabled?: boolean // Add enable/disable option
 }
 
 interface Live2DDragResult {
   isDragging: boolean
   position: { x: number; y: number }
-  setEnabled: (enabled: boolean) => void // 添加启用/禁用方法
+  setEnabled: (enabled: boolean) => void // Add enable/disable method
 }
 
 /**
- * 钩子用于管理Live2D模型的内部拖动
- * 注意：暂时禁用此功能，以避免与窗口拖动冲突
+ * Hook for managing internal dragging of Live2D models
+ * Note: This functionality is temporarily disabled to avoid conflicts with window dragging
  */
 export const useLive2DDrag = ({ canvasRef, enabled = false }: Live2DDragOptions): Live2DDragResult => {
   const [isDragging, setIsDragging] = useState(false)
@@ -26,10 +26,10 @@ export const useLive2DDrag = ({ canvasRef, enabled = false }: Live2DDragOptions)
     const canvas = canvasRef.current
 
     const handleMouseDown = (e: MouseEvent) => {
-      // 检查是否按下了Ctrl键 - 如果按下，则不处理拖动，让外部窗口拖动功能接管
+      // Check if Ctrl key is pressed - if so, don't handle dragging, let external window dragging take over
       if (e.ctrlKey) return
 
-      // 阻止事件冒泡，避免触发外层容器的拖动
+      // Prevent event bubbling to avoid triggering outer container dragging
       e.stopPropagation()
 
       setIsDragging(true)
@@ -39,11 +39,11 @@ export const useLive2DDrag = ({ canvasRef, enabled = false }: Live2DDragOptions)
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return
 
-      // 阻止事件冒泡
+      // Prevent event bubbling
       e.stopPropagation()
 
-      // 模型内部的拖动逻辑（暂时为空）
-      // 实际使用时在这里添加调整Live2D模型位置的代码
+      // Model internal dragging logic (temporarily empty)
+      // Add code to adjust Live2D model position when actually using this
 
       setPosition({ x: e.clientX, y: e.clientY })
     }
@@ -51,19 +51,19 @@ export const useLive2DDrag = ({ canvasRef, enabled = false }: Live2DDragOptions)
     const handleMouseUp = (e: MouseEvent) => {
       if (!isDragging) return
 
-      // 阻止事件冒泡
+      // Prevent event bubbling
       e.stopPropagation()
 
       setIsDragging(false)
     }
 
-    // 由于当前与窗口拖动冲突，我们暂时不添加任何事件监听器
+    // Due to current conflicts with window dragging, we temporarily don't add any event listeners
     // canvas.addEventListener('mousedown', handleMouseDown)
     // document.addEventListener('mousemove', handleMouseMove)
     // document.addEventListener('mouseup', handleMouseUp)
 
     return () => {
-      // 同样，不需要移除未添加的监听器
+      // Similarly, no need to remove listeners that weren't added
       // canvas.removeEventListener('mousedown', handleMouseDown)
       // document.removeEventListener('mousemove', handleMouseMove)
       // document.removeEventListener('mouseup', handleMouseUp)

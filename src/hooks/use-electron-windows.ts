@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// 窗口操作钩子
+// Window operations hook
 export function useElectronWindows() {
     const [windowId, setWindowId] = useState<string | null>(null);
     const [windows, setWindows] = useState<string[]>([]);
 
-    // 获取当前窗口 ID
+    // Get current window ID
     useEffect(() => {
         const cleanup = window.electronAPI.onWindowId((id) => {
             setWindowId(id);
@@ -14,24 +14,24 @@ export function useElectronWindows() {
         return cleanup;
     }, []);
 
-    // 获取所有窗口列表
+    // Get all windows list
     const refreshWindows = useCallback(async () => {
         try {
             const allWindows = await window.electronAPI.getAllWindows();
             setWindows(allWindows);
             return allWindows;
         } catch (error) {
-            console.error('获取窗口列表失败:', error);
+            console.error('Failed to get windows list:', error);
             return [];
         }
     }, []);
 
-    // 初始化时获取窗口列表
+    // Initialize window list on mount
     useEffect(() => {
         refreshWindows();
     }, [refreshWindows]);
 
-    // 创建新窗口
+    // Create new window
     const createWindow = useCallback(async (
         name: string,
         width?: number,
@@ -48,18 +48,18 @@ export function useElectronWindows() {
             await refreshWindows();
             return winId;
         } catch (error) {
-            console.error('创建窗口失败:', error);
+            console.error('Failed to create window:', error);
             return -1;
         }
     }, [refreshWindows]);
 
-    // 发送消息到其他窗口
+    // Send message to other window
     const sendMessage = useCallback((targetWindowId: string, channel: string, data: any) => {
         if (!targetWindowId || targetWindowId === windowId) return;
         window.electronAPI.sendMessageToWindow(targetWindowId, channel, data);
     }, [windowId]);
 
-    // 向所有其他窗口广播消息
+    // Broadcast message to all other windows
     const broadcastMessage = useCallback((channel: string, data: any) => {
         windows.forEach(id => {
             if (id !== windowId) {
@@ -68,7 +68,7 @@ export function useElectronWindows() {
         });
     }, [windows, windowId]);
 
-    // 监听来自其他窗口的消息
+    // Listen for messages from other windows
     const useWindowMessage = (channel: string, callback: (data: any) => void) => {
         useEffect(() => {
             const cleanup = window.electronAPI.onWindowMessage(channel, callback);
@@ -85,4 +85,4 @@ export function useElectronWindows() {
         broadcastMessage,
         useWindowMessage
     };
-} 
+}

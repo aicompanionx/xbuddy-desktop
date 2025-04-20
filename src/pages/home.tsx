@@ -1,4 +1,3 @@
-import { BrowserMonitor } from '@/components/features/browser-monitor'
 import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
 
@@ -33,12 +32,34 @@ const Home: React.FC = () => {
     }
   }, [])
 
+  const handleMouseEnter = () => {
+    console.log('Mouse entered')
+    window.electronAPI.toggleIgnoreMouseEvents({
+      ignore: false,
+      windowId: 'main',
+      forward: true,
+    })
+  }
+
+  const handleMouseLeave = () => {
+    console.log('Mouse left')
+    window.electronAPI.toggleIgnoreMouseEvents({
+      ignore: true,
+      windowId: 'main',
+      forward: true,
+    })
+  }
+
   return (
     <div className="space-y-4">
+      <div className="w-[100px] h-[100px] bg-red-500" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <p>Hello</p>
+        <p>World</p>
+      </div>
       <Button onClick={handleCreateLive2D} className="bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
         Create Live2D Character
       </Button>
-      <BrowserMonitor />
+      {/* <BrowserMonitor /> */}
     </div>
   )
 }

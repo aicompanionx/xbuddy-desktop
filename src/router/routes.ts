@@ -2,8 +2,6 @@ import { ComponentType } from 'react';
 import Home from '@/pages/home';
 import NotFound from '@/pages/not-found';
 import Live2DPage from '@/pages/live2d';
-import VisionPage from '@/pages/vision-page';
-import GuiAgentPage from '@/pages/gui-agent-page';
 
 /**
  * Route item interface definition
@@ -34,16 +32,6 @@ export const routes: RouteItem[] = [
         component: Home,
         title: 'Home',
         index: true,
-    },
-    {
-        path: '/vision',
-        component: VisionPage,
-        title: 'AI Vision Control',
-    },
-    {
-        path: '/gui-agent',
-        component: GuiAgentPage,
-        title: 'GUI Automation Agent',
     },
     {
         path: '/live2d',

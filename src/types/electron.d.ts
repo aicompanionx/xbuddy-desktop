@@ -1,7 +1,50 @@
-// Define ElectronAPI interface in global scope
+interface ApiResponse<T = any> {
+    success: boolean;
+    data?: T;
+    status?: number;
+    error?: string;
+}
+
+type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
+
+interface HttpAPI {
+    request: <T = any>(
+        method: HttpMethod,
+        url: string,
+        data?: any,
+        headers?: Record<string, string>,
+        params?: Record<string, any>
+    ) => Promise<ApiResponse<T>>;
+    get: <T = any>(
+        url: string,
+        params?: Record<string, any>,
+        headers?: Record<string, string>
+    ) => Promise<ApiResponse<T>>;
+    post: <T = any>(
+        url: string,
+        data?: any,
+        headers?: Record<string, string>
+    ) => Promise<ApiResponse<T>>;
+    put: <T = any>(
+        url: string,
+        data?: any,
+        headers?: Record<string, string>
+    ) => Promise<ApiResponse<T>>;
+    delete: <T = any>(
+        url: string,
+        params?: Record<string, any>,
+        headers?: Record<string, string>
+    ) => Promise<ApiResponse<T>>;
+    patch: <T = any>(
+        url: string,
+        data?: any,
+        headers?: Record<string, string>
+    ) => Promise<ApiResponse<T>>;
+}
+
 interface ElectronAPI {
     // Notification related
-    sendNotification: (options: { title: string; body: string; route?: string }) => void;
+    sendNotification: (title: string, body: string, route: string) => void;
     onNotificationClick: (callback: (route: string) => void) => void;
     removeNotificationListeners: () => void;
 
@@ -13,10 +56,17 @@ interface ElectronAPI {
     sendToWindow: (options: { windowId: number; channel: string; data: any }) => void;
     onWindowMessage: (channel: string, callback: (data: any) => void) => () => void;
     getWindowType: () => Promise<string>;
-    
+    toggleIgnoreMouseEvents: (options: {
+        ignore: boolean;
+        windowId: string;
+        forward?: boolean;
+    }) => void;
+    moveWindow: (options: { windowId: string; x: number; y: number }) => void;
+
     // Live2D window
-    createLive2DWindow: (options: { width: number; height: number; hash?: string }) => Promise<number>;
-    setWindowPosition: (options: { windowId: number; x: number; y: number }) => void;
+    createLive2DWindow: (options: { width?: number; height?: number, hash?: string }) => Promise<number>;
+    setWindowPosition: (options: { windowId: string; x: number; y: number }) => void;
+    getWindowPosition: (windowId: string) => Promise<{ x: number; y: number }>;
 
     // Automation related
     startAutomation: (options: any) => Promise<any>;
@@ -30,7 +80,11 @@ interface ElectronAPI {
     findElementByImage: (options: any) => Promise<any>;
     setAIModelConfig: (config: { provider: string; apiKey: string; baseURL?: string; modelName?: string }) => Promise<{ success: boolean; error?: string }>;
     setOpenAIConfig: (config: { apiKey: string; baseURL?: string }) => Promise<{ success: boolean; error?: string }>;
-    
+
+    // New Vision Instruction API
+    analyzeVisionInstruction: (options: { instruction: string }) => Promise<any>;
+    analyzeImageInstruction: (options: { base64Image: string; instruction: string }) => Promise<any>;
+
     // Legacy API (Vision and automation)
     processInstruction: (instruction: string) => Promise<any>;
     captureScreen: () => Promise<any>;
@@ -50,24 +104,21 @@ interface ElectronAPI {
     onBrowserData: (callback: (data: any) => void) => () => void;
 
     // URL Safety API
-    checkUrlSafety: (url: string) => Promise<{
-        url: string;
-        isSafe: boolean;
-        riskScore?: number;
-        category?: string;
-        reason?: string;
-        timestamp: number;
-    }>;
+    checkUrlSafety: (url: string) => Promise<{ safe: boolean; reason?: string }>;
     clearUrlSafetyCache: () => Promise<{ success: boolean; message?: string; error?: string }>;
 
     // Phishing detection
     onUnsafeUrlDetected: (callback: (result: any) => void) => () => void;
+
+    // HTTP API (as namespace)
+    http: HttpAPI;
 }
 
 // Extend Window interface globally
 declare global {
     interface Window {
         electronAPI: ElectronAPI;
+        model?: Live2DModel; // Live2D model object
     }
 }
 

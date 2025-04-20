@@ -1,71 +1,58 @@
 import React, { useEffect, useState } from 'react'
 import { useAppStore } from '@/store/app'
-import { PhishingAlert } from '../components/features/phishing-alert'
-import { useBrowserSafetyMonitor } from '../hooks/use-browser-safety-monitor'
-import { Live2DContainer } from '../components/features/live2d-container'
+import { Live2DContainerWithMenu } from '../components/features/live2d-container-with-menu'
+import PhishingAlert, { UnsafeUrlAlert } from '../components/ui/phishing-alert'
 
-const modelPath = `assets/live2d/hiyori_free_en/runtime/hiyori_free_t08.model3.json`
+const modelPath = `assets/live2d/shizuku/runtime/shizuku.model3.json`
 
 const Live2DPage: React.FC = () => {
   const { selectWindow } = useAppStore()
   const [windowId, setWindowId] = useState<string>('')
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  })
-  const [componentKey, setComponentKey] = useState(Date.now())
+  const [unsafeAlert, setUnsafeAlert] = useState<UnsafeUrlAlert | null>(null)
+  const [alertVisible, setAlertVisible] = useState(false)
 
-  // 使用整合后的浏览器安全监控钩子
-  const { shouldShowAlert, alertResult, handleAlertClose, isMonitorActive } = useBrowserSafetyMonitor()
-
-  // 获取窗口ID并更新应用状态
+  // Get window ID and update app state
   useEffect(() => {
-    const cleanup = window.electronAPI.onWindowId((id) => {
+    const cleanup = window.electronAPI.onWindowId((id: string) => {
       setWindowId(id)
-      console.log('Live2D窗口ID:', id)
+      console.log('Live2D Window ID:', id)
       selectWindow(id)
     })
 
     return cleanup
   }, [selectWindow])
 
-  // 处理窗口大小调整
+  // Listen for unsafe URL notifications
   useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
+    const unsubscribe = window.electronAPI.onUnsafeUrlDetected((result) => {
+      console.log('Unsafe URL detected:', result)
+      // Show alert with the unsafe URL information
+      setUnsafeAlert({
+        url: result.url,
+        reason: result.reason || 'Potentially malicious website',
+        timestamp: result.timestamp,
       })
-      setComponentKey(Date.now())
-      console.log('窗口大小调整:', window.innerWidth, window.innerHeight)
-    }
+      setAlertVisible(true)
+    })
 
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    return unsubscribe
   }, [])
+
+  // Handle closing the alert
+  const handleCloseAlert = () => {
+    setAlertVisible(false)
+    // Clear alert data after animation completes
+    setTimeout(() => setUnsafeAlert(null), 500)
+  }
 
   return (
     <>
       {windowId && (
-        <Live2DContainer
-          key={componentKey}
-          windowId={windowId}
-          modelPath={modelPath}
-          width={windowSize.width}
-          height={windowSize.height}
-          autoResize={true}
-          fullscreen={true}
-        />
+        <Live2DContainerWithMenu windowId={windowId} modelPath={modelPath} autoResize={true} fullscreen={true} />
       )}
 
-      {/* 风险URL警告组件 - 置于顶部以获得最大可见性 */}
-      {shouldShowAlert && (
-        <div className="fixed top-0 left-0 right-0 p-2 z-[9999] pointer-events-auto">
-          <PhishingAlert result={alertResult} onClose={handleAlertClose} className="shadow-xl border-2 animate-pulse" />
-        </div>
-      )}
+      {/* Phishing Alert Component */}
+      {unsafeAlert && <PhishingAlert alert={unsafeAlert} visible={alertVisible} onClose={handleCloseAlert} />}
     </>
   )
 }
