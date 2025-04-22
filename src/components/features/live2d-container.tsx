@@ -3,11 +3,9 @@ import Live2DCharacter from './live2d-character'
 import { useLive2DDrag } from '@/hooks/use-live2d-drag'
 import PhishingAlert, { UnsafeUrlAlert } from '@/components/ui/phishing-alert'
 import Live2DMenu from '@/components/ui/live2d-menu'
-import { CLASSNAME } from '@/constants/classname'
 
 interface Live2DContainerProps {
   windowId: string
-  modelPath: string
   className?: string
   style?: React.CSSProperties
   width?: number
@@ -16,7 +14,7 @@ interface Live2DContainerProps {
   fullscreen?: boolean
 }
 
-export const Live2DContainer: React.FC<Live2DContainerProps> = ({ windowId, modelPath, width = 300, height = 400 }) => {
+export const Live2DContainer: React.FC<Live2DContainerProps> = ({ windowId, width = 300, height = 400 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [unsafeAlert, setUnsafeAlert] = useState<UnsafeUrlAlert | null>(null)
   const [alertVisible, setAlertVisible] = useState(false)
@@ -195,7 +193,7 @@ export const Live2DContainer: React.FC<Live2DContainerProps> = ({ windowId, mode
 
       {/* Phishing alert component */}
       {unsafeAlert && <PhishingAlert alert={unsafeAlert} visible={alertVisible} onClose={handleCloseAlert} />}
-      <Live2DCharacter windowId={windowId} modelPath={modelPath} width={width} height={height} centerModel={true} />
+      <Live2DCharacter windowId={windowId} width={width} height={height} centerModel={true} />
     </div>
   )
 }

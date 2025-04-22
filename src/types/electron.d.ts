@@ -1,4 +1,7 @@
-interface ApiResponse<T = any> {
+import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types';
+import type { Application as ApplicationType } from 'pixi.js';
+
+interface ApiResponse<T> {
     success: boolean;
     data?: T;
     status?: number;
@@ -117,12 +120,27 @@ interface ElectronAPI {
 
 // Extend Window interface globally
 declare global {
-    type PixiApp = any
+    type Application = ApplicationType;
+
+    type Live2DModel = Live2DModelType & {
+        speak(audioUrl: string, options: unknown): void;
+        stopMotions(): void;
+    };
+
+    interface Live2DModelStatic {
+        from(modelPath: string): Promise<Live2DModel>;
+    }
 
     interface Window {
         electronAPI: ElectronAPI;
-        model?: Live2DModel; // Live2D model object
+
+        PIXI: {
+            Application: ApplicationType & {
+                new(options: unknown): ApplicationType;
+            };
+            live2d: {
+                Live2DModel: Live2DModelStatic
+            };
+        };
     }
 }
-
-export { };

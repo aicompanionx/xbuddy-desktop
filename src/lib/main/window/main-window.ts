@@ -19,7 +19,7 @@ export const createMainWindow = (url?: string): BrowserWindow => {
         frame: false,
         maximizable: false,
         resizable: false,
-        alwaysOnTop: true,
+        // alwaysOnTop: true,
         hasShadow: false,
         webPreferences: {
             preload: path.join(appPath, '.vite', 'build', 'preload.js'),
@@ -39,7 +39,7 @@ export const createMainWindow = (url?: string): BrowserWindow => {
 
     if (process.env.NODE_ENV === 'development') {
         browserWindow.loadURL(url || 'http://localhost:5173/#/live2d');
-        // browserWindow.webContents.openDevTools();
+        browserWindow.webContents.openDevTools();
     } else {
         browserWindow.loadFile(path.join(appPath, 'renderer/index.html'));
 
