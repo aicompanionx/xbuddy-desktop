@@ -1,31 +1,33 @@
 import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
 
-interface ApiResponse<T = any> {
-  success: boolean
-  data?: T
-  status?: number
-  error?: string
+import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types';
+import type { Application as ApplicationType } from 'pixi.js';
+interface ApiResponse<T> {
+    success: boolean;
+    data?: T;
+    status?: number;
+    error?: string;
 }
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch'
 
 interface HttpAPI {
-  request: <T = any>(
+  request: <T = unknown>(
     method: HttpMethod,
     url: string,
-    data?: any,
+    data?: unknown,
     headers?: Record<string, string>,
-    params?: Record<string, any>,
+    params?: Record<string, unknown>,
   ) => Promise<ApiResponse<T>>
-  get: <T = any>(url: string, params?: Record<string, any>, headers?: Record<string, string>) => Promise<ApiResponse<T>>
-  post: <T = any>(url: string, data?: any, headers?: Record<string, string>) => Promise<ApiResponse<T>>
-  put: <T = any>(url: string, data?: any, headers?: Record<string, string>) => Promise<ApiResponse<T>>
-  delete: <T = any>(
+  get: <T = unknown>(url: string, params?: Record<string, unknown>, headers?: Record<string, string>) => Promise<ApiResponse<T>>
+  post: <T = unknown>(url: string, data?: unknown, headers?: Record<string, string>) => Promise<ApiResponse<T>>
+  put: <T = unknown>(url: string, data?: unknown, headers?: Record<string, string>) => Promise<ApiResponse<T>>
+  delete: <T = unknown>(
     url: string,
-    params?: Record<string, any>,
+    params?: Record<string, unknown>,
     headers?: Record<string, string>,
   ) => Promise<ApiResponse<T>>
-  patch: <T = any>(url: string, data?: any, headers?: Record<string, string>) => Promise<ApiResponse<T>>
+  patch: <T = unknown>(url: string, data?: unknown, headers?: Record<string, string>) => Promise<ApiResponse<T>>
 }
 
 interface ElectronAPI {
@@ -38,9 +40,9 @@ interface ElectronAPI {
   createWindow: (options: { name: string; width?: number; height?: number; url?: string }) => Promise<number>
   onWindowId: (callback: (windowId: string) => void) => () => void
   getAllWindows: () => Promise<string[]>
-  sendMessageToWindow: (windowId: string, channel: string, data: any) => void
-  sendToWindow: (options: { windowId: number; channel: string; data: any }) => void
-  onWindowMessage: (channel: string, callback: (data: any) => void) => () => void
+  sendMessageToWindow: (windowId: string, channel: string, data: unknown) => void
+  sendToWindow: (options: { windowId: number; channel: string; data: unknown }) => void
+  onWindowMessage: (channel: string, callback: (data: unknown) => void) => () => void
   getWindowType: () => Promise<string>
   toggleIgnoreMouseEvents: (options: { ignore: boolean; windowId: string; forward: boolean }) => void
   moveWindow: (options: { windowId: string; x: number; y: number }) => void
@@ -51,9 +53,9 @@ interface ElectronAPI {
   getWindowPosition: (windowId: string) => Promise<{ x: number; y: number }>
 
   // Automation related
-  startAutomation: (options: any) => Promise<any>
-  stopAutomation: () => Promise<any>
-  getAutomationStatus: () => Promise<any>
+  startAutomation: (options: unknown) => Promise<unknown>
+  stopAutomation: () => Promise<unknown>
+  getAutomationStatus: () => Promise<unknown>
   executeGuiAction: (action: string) => Promise<{ success: boolean; message: string }>
   processGuiAction: (
     task: string,
@@ -62,8 +64,8 @@ interface ElectronAPI {
   ) => Promise<{ success: boolean; thought?: string; action?: string; error?: string }>
 
   // Vision analysis related
-  analyzeScreenshot: (options?: any) => Promise<any>
-  findElementByImage: (options: any) => Promise<any>
+  analyzeScreenshot: (options?: unknown) => Promise<unknown>
+  findElementByImage: (options: unknown) => Promise<unknown>
   setAIModelConfig: (config: {
     provider: string
     apiKey: string
@@ -73,17 +75,17 @@ interface ElectronAPI {
   setOpenAIConfig: (config: { apiKey: string; baseURL?: string }) => Promise<{ success: boolean; error?: string }>
 
   // New Vision Instruction API
-  analyzeVisionInstruction: (options: { instruction: string }) => Promise<any>
-  analyzeImageInstruction: (options: { base64Image: string; instruction: string }) => Promise<any>
+  analyzeVisionInstruction: (options: { instruction: string }) => Promise<unknown>
+  analyzeImageInstruction: (options: { base64Image: string; instruction: string }) => Promise<unknown>
 
   // Legacy API (Vision and automation)
-  processInstruction: (instruction: string) => Promise<any>
-  captureScreen: () => Promise<any>
-  moveMouse: (x: number, y: number) => Promise<any>
-  clickMouse: (x: number, y: number, doubleClick?: boolean) => Promise<any>
-  typeText: (text: string) => Promise<any>
-  pressKey: (keyName: string) => Promise<any>
-  convertImageToBase64: (filePath: string) => Promise<any>
+  processInstruction: (instruction: string) => Promise<unknown>
+  captureScreen: () => Promise<unknown>
+  moveMouse: (x: number, y: number) => Promise<unknown>
+  clickMouse: (x: number, y: number, doubleClick?: boolean) => Promise<unknown>
+  typeText: (text: string) => Promise<unknown>
+  pressKey: (keyName: string) => Promise<unknown>
+  convertImageToBase64: (filePath: string) => Promise<unknown>
 
   // Image conversion
   captureScreenshot: () => Promise<string>
@@ -92,7 +94,7 @@ interface ElectronAPI {
   startBrowserMonitoring: () => Promise<{ success: boolean; message: string }>
   stopBrowserMonitoring: () => Promise<{ success: boolean; message: string }>
   getBrowserMonitoringStatus: () => Promise<{ isRunning: boolean }>
-  onBrowserData: (callback: (data: any) => void) => () => void
+  onBrowserData: (callback: (data: unknown) => void) => () => void
 
   // URL Safety API
   checkUrlSafety: (url: string) => Promise<{ safe: boolean; reason?: string }>
@@ -107,12 +109,27 @@ interface ElectronAPI {
 
 // Extend Window interface globally
 declare global {
-  type PixiApp = any
+    type Application = ApplicationType;
 
-  interface Window {
-    electronAPI: ElectronAPI
-    model?: Live2DModel // Live2D model object
-  }
+    type Live2DModel = Live2DModelType & {
+        speak(audioUrl: string, options: unknown): void;
+        stopMotions(): void;
+    };
+
+    interface Live2DModelStatic {
+        from(modelPath: string): Promise<Live2DModel>;
+    }
+
+    interface Window {
+        electronAPI: ElectronAPI;
+
+        PIXI: {
+            Application: ApplicationType & {
+                new(options: unknown): ApplicationType;
+            };
+            live2d: {
+                Live2DModel: Live2DModelStatic
+            };
+        };
+    }
 }
-
-export {}

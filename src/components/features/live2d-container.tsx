@@ -14,7 +14,6 @@ import { type UrlSafetyResult } from '@/lib/preload/url-safety-api'
 
 interface Live2DContainerProps {
   windowId: string
-  modelPath: string
   className?: string
   style?: React.CSSProperties
   width?: number
@@ -23,7 +22,7 @@ interface Live2DContainerProps {
   fullscreen?: boolean
 }
 
-export const Live2DContainer = memo(({ windowId, modelPath, width = 300, height = 400 }: Live2DContainerProps) => {
+export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Live2DContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [unsafeAlert, setUnsafeAlert] = useState<UrlSafetyResult | null>(null)
   const [alertVisible, setAlertVisible] = useState(false)
@@ -115,7 +114,7 @@ export const Live2DContainer = memo(({ windowId, modelPath, width = 300, height 
 
       {/* Phishing alert component */}
       {unsafeAlert && <PhishingAlert alert={unsafeAlert} visible={alertVisible} onClose={handleCloseAlert} />}
-      <Live2DCharacter windowId={windowId} modelPath={modelPath} width={width} height={height} centerModel={true} />
+      <Live2DCharacter windowId={windowId} width={width} height={height} centerModel={true} />
     </div>
   )
 })
