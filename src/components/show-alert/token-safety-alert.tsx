@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import { FcIdea } from 'react-icons/fc'
 
 import { cn, shortenName } from '@/utils'
-import { TokenSafetyAlertProps } from '../../../types/alert'
+import { TokenSafetyAlertProps } from '../../types/alert'
 import { CLASSNAME } from '@/constants/classname'
 import TokenSafetyArea from './token-safety-area'
 import TokenTwitterArea from './token-twitter-area'

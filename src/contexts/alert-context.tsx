@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react'
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
-import { TokenAnalysis } from '@/lib/main/api/token-safety/types/token'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
+import { TokenAnalysis } from '@/service/main/api/token-safety/types/token'
 
 // Define Alert types
 export type AlertType = 'phishing' | 'tokenSafety'
