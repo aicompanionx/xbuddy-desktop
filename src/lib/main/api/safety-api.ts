@@ -1,21 +1,12 @@
-import { xbuddyClient } from './api-client';
-import { StorageService } from './storage-service';
-
-/**
- * URL safety check result interface
- */
-export interface UrlSafetyResult {
-    url: string;
-    isSafe: boolean;
-    reason?: string;
-    timestamp: number;
-}
+import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import { xbuddyClient } from './api-client'
+import { StorageService } from './storage-service'
 
 // Create persistent storage for URL safety results
-const urlSafetyStorage = new StorageService('url-safety-cache');
+const urlSafetyStorage = new StorageService('url-safety-cache')
 
 // Cache validity period (24 hours)
-const CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
+const CACHE_MAX_AGE = 24 * 60 * 60 * 1000
 
 /**
  * Check URL safety
@@ -23,53 +14,58 @@ const CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
  * @param forceRefresh Whether to force refresh the cache
  * @returns Safety check result
  */
-export const checkUrlSafety = async (
-    url: string,
-    forceRefresh = false
-): Promise<UrlSafetyResult> => {
-    // First check persistent cache (if not forcing refresh)
-    if (!forceRefresh && urlSafetyStorage.has(url)) {
-        const cachedResult = urlSafetyStorage.get<UrlSafetyResult>(url);
+export const checkUrlSafety = async (url: string, forceRefresh = false, lang = 'en'): Promise<UrlSafetyResult> => {
+  // First check persistent cache (if not forcing refresh)
+  if (!forceRefresh && urlSafetyStorage.has(url)) {
+    const cachedResult = urlSafetyStorage.get<UrlSafetyResult>(url)
+    console.log('cachedResult', cachedResult)
 
-        // Check if cache entry is still valid (not older than 24 hours)
-        const now = Date.now();
-        const cacheAge = now - (cachedResult?.timestamp || 0);
+    // Check if cache entry is still valid (not older than 24 hours)
+    const now = Date.now()
+    const cacheAge = now - (cachedResult?.timestamp || 0)
 
-        if (cachedResult && cacheAge < CACHE_MAX_AGE) {
-            return cachedResult;
-        }
+    if (cachedResult && cacheAge < CACHE_MAX_AGE) {
+      return cachedResult
+    }
+  }
+
+  let result: UrlSafetyResult
+  try {
+    // Call safety API service
+    const response = await xbuddyClient.post<UrlSafetyResult>('/api/check-phishing', {
+      url,
+      lang,
+    })
+
+    console.log('response', response.data)
+
+    // Create result object
+    result = {
+      url: response.data?.url || url,
+      isPhishing: response.data?.isPhishing || false,
+      message: response.data?.message,
+      timestamp: Date.now(),
     }
 
-    try {
-        // Call safety API service
-        const response = await xbuddyClient.get<UrlSafetyResult>(`/api/goplus/check-url?url=${url}`);
+    // Store in persistent cache
+    urlSafetyStorage.set(url, result)
 
-        // Create result object
-        const result: UrlSafetyResult = response.data || {
-            url,
-            isSafe: true,
-            timestamp: Date.now()
-        };
-
-        // Store in persistent cache
-        urlSafetyStorage.set(url, result);
-
-        return result;
-    } catch (error) {
-        console.error('Error checking URL safety:', error);
-        const result: UrlSafetyResult = {
-            url,
-            isSafe: false,
-            reason: 'Error checking URL safety: ' + (error instanceof Error ? error.message : String(error)),
-            timestamp: Date.now()
-        };
-
-        // Also cache error results
-        urlSafetyStorage.set(url, result);
-
-        return result;
+    return result
+  } catch (error) {
+    console.error('Error checking URL safety:', error)
+    result = {
+      url,
+      isPhishing: false,
+      message: 'Error checking URL safety: ' + (error instanceof Error ? error.message : String(error)),
+      timestamp: Date.now(),
     }
-};
+
+    // Also cache error results
+    urlSafetyStorage.set(url, result)
+
+    return result
+  }
+}
 
 /**
  * Batch check multiple URLs for safety
@@ -79,41 +75,41 @@ export const checkUrlSafety = async (
  * @returns Object mapping URLs to safety check results
  */
 export const checkMultipleUrls = async (
-    urls: string[],
-    forceRefresh = false,
-    batchSize = 5
+  urls: string[],
+  forceRefresh = false,
+  batchSize = 5,
 ): Promise<Record<string, UrlSafetyResult>> => {
-    const results: Record<string, UrlSafetyResult> = {};
+  const results: Record<string, UrlSafetyResult> = {}
 
-    // Process URLs in batches to avoid overwhelming the API
-    for (let i = 0; i < urls.length; i += batchSize) {
-        const batch = urls.slice(i, i + batchSize);
-        const batchPromises = batch.map(url => checkUrlSafety(url, forceRefresh));
+  // Process URLs in batches to avoid overwhelming the API
+  for (let i = 0; i < urls.length; i += batchSize) {
+    const batch = urls.slice(i, i + batchSize)
+    const batchPromises = batch.map((url) => checkUrlSafety(url, forceRefresh))
 
-        const batchResults = await Promise.all(batchPromises);
+    const batchResults = await Promise.all(batchPromises)
 
-        batch.forEach((url, index) => {
-            results[url] = batchResults[index];
-        });
-    }
+    batch.forEach((url, index) => {
+      results[url] = batchResults[index]
+    })
+  }
 
-    return results;
-};
+  return results
+}
 
 /**
  * Clear URL safety cache
  */
 export const clearUrlSafetyCache = (): void => {
-    urlSafetyStorage.clear();
-};
+  urlSafetyStorage.clear()
+}
 
 /**
  * Get all cached safety results
  * @returns Object containing all cached results
  */
 export const getAllSafetyResults = (): Record<string, UrlSafetyResult> => {
-    return urlSafetyStorage.getAll<UrlSafetyResult>();
-};
+  return urlSafetyStorage.getAll<UrlSafetyResult>()
+}
 
 /**
  * Remove safety result for a specific URL from cache
@@ -121,14 +117,14 @@ export const getAllSafetyResults = (): Record<string, UrlSafetyResult> => {
  * @returns Whether deletion was successful
  */
 export const removeUrlFromCache = (url: string): boolean => {
-    return urlSafetyStorage.delete(url);
-};
+  return urlSafetyStorage.delete(url)
+}
 
 // Export functions using xbuddyClient
 export const safetyApi = {
-    checkUrlSafety,
-    checkMultipleUrls,
-    clearCache: clearUrlSafetyCache,
-    getAllResults: getAllSafetyResults,
-    removeUrlFromCache
-};
+  checkUrlSafety,
+  checkMultipleUrls,
+  clearCache: clearUrlSafetyCache,
+  getAllResults: getAllSafetyResults,
+  removeUrlFromCache,
+}

@@ -54,7 +54,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, onClose, leftButtons, r
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="absolute inset-0 pointer-events-none" onClick={handleMenuClick}>
+        <div className="absolute inset-0 pointer-events-none text-white" onClick={handleMenuClick}>
           {/* 左侧按钮 */}
           <motion.div
             key="left-top"

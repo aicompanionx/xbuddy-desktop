@@ -58,8 +58,15 @@ const setupModel = (model: Live2DModel, app: any, width: number, height: number)
     // Center the model in the canvas
     safeSetModelPosition(model, width / 2, height / 2)
 
-    // Use a smaller initial scale to ensure full model visibility
-    safeSetModelScale(model, 0.1)
+    // Calculate scale to fit model height within 100% of canvas height
+    // Ensure model.height is not zero to avoid division by zero
+    const scale = model.height > 0 ? height / model.height : 0.1 // Default scale if model height is 0
+
+    // Log the calculated scale for debugging
+    console.log(`Calculated model scale: ${scale} (Canvas height: ${height}, Model height: ${model.height})`)
+
+    // Apply the calculated scale
+    safeSetModelScale(model, scale)
 
     // Add model to stage
     app.stage.addChild(model)
@@ -107,12 +114,7 @@ const setupTicker = (model: Live2DModel, app: any, width: number, height: number
   }
 }
 
-export function useLive2DModel({
-  modelPath,
-  width,
-  height,
-  canvasRef,
-}: UseLive2DModelProps): UseLive2DModelReturn {
+export function useLive2DModel({ modelPath, width, height, canvasRef }: UseLive2DModelProps): UseLive2DModelReturn {
   const [isLoading, setIsLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const appRef = useRef<PixiApp | null>(null)
@@ -182,7 +184,7 @@ export function useLive2DModel({
 
         // Make model instance available globally for interaction and debugging
         if (typeof window !== 'undefined') {
-          window.model = model;
+          window.model = model
         }
 
         // Setup model properties
@@ -215,7 +217,7 @@ export function useLive2DModel({
               app.destroy(true, {
                 children: true,
                 texture: true,
-                baseTexture: true
+                baseTexture: true,
               })
             } catch (error) {
               console.error('Error cleaning up PIXI application:', error)
@@ -234,7 +236,7 @@ export function useLive2DModel({
             appRef.current.destroy(true, {
               children: true,
               texture: true,
-              baseTexture: true
+              baseTexture: true,
             })
             appRef.current = null
           } catch (cleanupError) {
@@ -260,19 +262,19 @@ export function useLive2DModel({
   useEffect(() => {
     // Get initial window position
     if (typeof window !== 'undefined' && window.electronAPI) {
-      window.electronAPI.getWindowPosition(WINDOWS_ID.MAIN)
+      window.electronAPI
+        .getWindowPosition(WINDOWS_ID.MAIN)
         .then((position) => {
           if (position) {
-            initialWindowPositionRef.current = position;
-            windowPositionRef.current = position;
+            initialWindowPositionRef.current = position
+            windowPositionRef.current = position
           }
         })
         .catch((error) => {
-          console.error('Failed to get window position:', error);
-        });
+          console.error('Failed to get window position:', error)
+        })
     }
-  }, []);
-
+  }, [])
 
   return {
     isLoading,

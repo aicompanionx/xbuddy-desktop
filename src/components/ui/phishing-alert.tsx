@@ -1,13 +1,11 @@
 import React from 'react'
-
-export interface UnsafeUrlAlert {
-  url: string
-  reason: string
-  timestamp: number
-}
+import { ShieldAlert, ShieldCheck, X } from 'lucide-react'
+import { cn } from '@/utils'
+import { CLASSNAME } from '@/constants/classname'
+import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
 
 interface PhishingAlertProps {
-  alert: UnsafeUrlAlert
+  alert: UrlSafetyResult
   visible: boolean
   onClose: () => void
 }
@@ -15,47 +13,45 @@ interface PhishingAlertProps {
 const PhishingAlert: React.FC<PhishingAlertProps> = ({ alert, visible, onClose }) => {
   if (!visible) return null
 
+  const formattedTime = new Date(alert.timestamp).toLocaleString()
+
+  // Use reason as the main message, or a default message
+  const message = alert.message || 'This is a dangerous website that will steal your money. Close it immediately!'
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4 overflow-hidden animate-in fade-in duration-300">
-        <div className="bg-red-600 p-4 text-white">
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-            <h3 className="text-lg font-semibold">Security Alert</h3>
-          </div>
-        </div>
+    // Position absolutely above the container, centered horizontally
+    <div
+      className={cn(
+        'absolute -top-15 left-1/2 -translate-x-1/2 z-50 w-max max-w-xs animate-in fade-in slide-in-from-top-5 duration-300',
+        visible ? 'opacity-100' : 'opacity-0 pointer-events-none',
+        'transition-opacity',
+        CLASSNAME.IGNORE_MOUSE_EVENTS,
+      )}
+    >
+      {/* Bubble style: white bg, rounded, shadow */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="flex items-start space-x-3">
+          {/* Icon (optional, can be removed for closer match to image) */}
+          {alert.isPhishing && <ShieldAlert className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />}
+          {!alert.isPhishing && <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />}
 
-        <div className="p-6">
-          <h4 className="text-lg font-medium mb-2 dark:text-white">Potentially Dangerous Website Detected</h4>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">A suspicious website has been detected:</p>
-          <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-md mb-4 break-all">
-            <p className="font-mono text-sm dark:text-white">{alert.url}</p>
+          {/* Message content */}
+          <div className="flex-1">
+            <p className="text-sm text-gray-800 dark:text-gray-200">{message}</p>
+            {/* Optionally show URL on hover/click, kept simple for now */}
+            {/* <p className="text-xs text-gray-500 mt-1 break-all">{alert.url}</p> */}
           </div>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            <strong>Reason:</strong> {alert.reason}
-          </p>
 
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-colors"
-            >
-              Close
-            </button>
-          </div>
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className={cn(
+              'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors focus:outline-none',
+            )}
+            aria-label="Close alert"
+          >
+            <X className={cn('h-5 w-5')} />
+          </button>
         </div>
       </div>
     </div>

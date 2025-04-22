@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
-import { electronAPI } from './lib/preload';
+import { contextBridge } from 'electron'
+import { electronAPI } from './lib/preload'
 
-contextBridge.exposeInMainWorld('electronAPI', electronAPI); 
+contextBridge.exposeInMainWorld('electronAPI', electronAPI)
