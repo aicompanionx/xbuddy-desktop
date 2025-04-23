@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, memo } from 'react'
-import { IoChatboxSharp } from 'react-icons/io5'
+import { IoChatboxSharp, IoSettingsOutline } from 'react-icons/io5'
 import { FaExchangeAlt } from 'react-icons/fa'
-import { IoSettingsOutline } from 'react-icons/io5'
 import { HiMiniSpeakerWave } from 'react-icons/hi2'
 import { RiNewspaperLine } from 'react-icons/ri'
 import { IoMdClose } from 'react-icons/io'
@@ -9,7 +8,7 @@ import { IoMdClose } from 'react-icons/io'
 import Live2DCharacter from './live2d-character'
 import { useLive2DDrag } from '@/hooks/use-live2d-drag'
 import PhishingAlert from '@/components/ui/phishing-alert'
-import Live2DMenu from '@/components/ui/live2d-menu'
+import Live2DMenu from '@/components/live2d/live2d-menu'
 import { type UrlSafetyResult } from '@/lib/preload/url-safety-api'
 
 interface Live2DContainerProps {

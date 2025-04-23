@@ -9,7 +9,7 @@ interface Live2DCharacterProps {
   centerModel?: boolean
 }
 
-const Live2DCharacter: React.FC<Live2DCharacterProps> = ({ width, height, centerModel = false }) => {
+const Live2DCharacter: React.FC<Live2DCharacterProps> = ({ width, height }) => {
   // Use Live2D model management hook
   const { canvasRef } = useLive2DModel({
     width: width,

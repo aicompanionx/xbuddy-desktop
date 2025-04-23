@@ -1,34 +1,6 @@
 import React from 'react'
-import { cn } from '@/utils'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CLASSNAME } from '@/constants/classname'
-
-interface MenuButtonProps {
-  onClick?: () => void
-  color: string
-  icon?: React.ReactNode
-  className?: string
-  style?: React.CSSProperties
-}
-
-const MenuButton: React.FC<MenuButtonProps> = ({ onClick, color, icon, className, style }) => {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      className={cn(
-        'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
-        color,
-        className,
-        CLASSNAME.IGNORE_MOUSE_EVENTS,
-      )}
-      onClick={onClick}
-      style={style}
-    >
-      {icon}
-    </motion.button>
-  )
-}
+import MenuButton from './live2d-menu-button'
 
 export interface Live2DMenuProps {
   isOpen: boolean
@@ -45,7 +17,7 @@ export interface Live2DMenuProps {
   }>
 }
 
-const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, onClose, leftButtons, rightButtons }) => {
+const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, leftButtons, rightButtons }) => {
   // 阻止点击菜单时关闭菜单
   const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation()
