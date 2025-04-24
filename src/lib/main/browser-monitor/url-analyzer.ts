@@ -113,7 +113,7 @@ export const analyzeUrlForToken = async (url: string, mainWindow: BrowserWindow 
       let CA: string | null = null
       if (url.includes('dexscreener.com')) {
         try {
-          const result = await tokenSafetyApi.getTokenByPool(tokenAddress)
+          const result = await tokenSafetyApi.getTokenByPool(chain, tokenAddress)
           CA = result.token.ca
         } catch (error) {
           console.error('Error analyzing URL for token safety:', error)

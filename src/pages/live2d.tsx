@@ -19,7 +19,7 @@ const Live2DPage: React.FC = () => {
 
   return (
     <>
-      {windowId && <Live2DContainer windowId={windowId} autoResize={true} width={500} height={500} fullscreen={true} />}
+      {windowId && <Live2DContainer windowId={windowId} autoResize={true} width={300} height={500} fullscreen={true} />}
     </>
   )
 }

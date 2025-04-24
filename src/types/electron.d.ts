@@ -1,14 +1,14 @@
 import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
-import { TokenSafetyProps } from '@/lib/main/api/token-safety/type'
-import { TwitterAccountInfo } from '@/lib/main/api/twitter/type'
+import { TokenSafetyProps } from '@/lib/main/api/token-safety/types/token'
+import { TwitterAccountInfo } from '@/lib/main/api/token-safety/types/twitter'
 
-import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types';
-import type { Application as ApplicationType } from 'pixi.js';
+import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types'
+import type { Application as ApplicationType } from 'pixi.js'
 interface ApiResponse<T> {
-    success: boolean;
-    data?: T;
-    status?: number;
-    error?: string;
+  success: boolean
+  data?: T
+  status?: number
+  error?: string
 }
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch'
@@ -21,7 +21,11 @@ interface HttpAPI {
     headers?: Record<string, string>,
     params?: Record<string, unknown>,
   ) => Promise<ApiResponse<T>>
-  get: <T = unknown>(url: string, params?: Record<string, unknown>, headers?: Record<string, string>) => Promise<ApiResponse<T>>
+  get: <T = unknown>(
+    url: string,
+    params?: Record<string, unknown>,
+    headers?: Record<string, string>,
+  ) => Promise<ApiResponse<T>>
   post: <T = unknown>(url: string, data?: unknown, headers?: Record<string, string>) => Promise<ApiResponse<T>>
   put: <T = unknown>(url: string, data?: unknown, headers?: Record<string, string>) => Promise<ApiResponse<T>>
   delete: <T = unknown>(
@@ -117,27 +121,27 @@ interface ElectronAPI {
 
 // Extend Window interface globally
 declare global {
-    type Application = ApplicationType;
+  type Application = ApplicationType
 
-    type Live2DModel = Live2DModelType & {
-        speak(audioUrl: string, options: unknown): void;
-        stopMotions(): void;
-    };
+  type Live2DModel = Live2DModelType & {
+    speak(audioUrl: string, options: unknown): void
+    stopMotions(): void
+  }
 
-    interface Live2DModelStatic {
-        from(modelPath: string): Promise<Live2DModel>;
+  interface Live2DModelStatic {
+    from(modelPath: string): Promise<Live2DModel>
+  }
+
+  interface Window {
+    electronAPI: ElectronAPI
+
+    PIXI: {
+      Application: ApplicationType & {
+        new (options: unknown): ApplicationType
+      }
+      live2d: {
+        Live2DModel: Live2DModelStatic
+      }
     }
-
-    interface Window {
-        electronAPI: ElectronAPI;
-
-        PIXI: {
-            Application: ApplicationType & {
-                new(options: unknown): ApplicationType;
-            };
-            live2d: {
-                Live2DModel: Live2DModelStatic
-            };
-        };
-    }
+  }
 }

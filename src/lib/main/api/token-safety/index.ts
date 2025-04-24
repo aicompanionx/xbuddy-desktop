@@ -11,12 +11,7 @@ import {
   type TokenDetailsByCAReq,
 } from './types/token'
 import { transformRisks, transformSolRisks } from '@/lib/utils/chains'
-import {
-  type TwitterAccountInfo,
-  type TwitterInfoReq,
-  type TwitterRenameRes,
-  type TwitterStatusRes,
-} from './types/twitter'
+import { type TwitterAccountInfo, type TwitterInfoReq, type TwitterRenameRes, type TwitterInfo } from './types/twitter'
 
 export const tokenSafetyApi = {
   checkTokenSafety: async (ca: string, chain?: string, lang = 'en'): Promise<TokenSafetyProps | null> => {
@@ -50,7 +45,7 @@ export const tokenSafetyApi = {
     }
   },
   twitterInfo: async (req: TwitterInfoReq): Promise<TwitterAccountInfo | null> => {
-    const statusResponse = await xbuddyClient.post<TwitterStatusRes>('/api/twitter/stat', req)
+    const statusResponse = await xbuddyClient.post<TwitterInfo>('/api/twitter/user_info', req)
     const renameResponse = await xbuddyClient.post<TwitterRenameRes>('/api/twitter/rename', req)
 
     const result: TwitterAccountInfo = {
@@ -158,8 +153,8 @@ export const tokenSafetyApi = {
       return tokenSafetyApi.createTokenAnalysisResponse(null, null, 'twitter')
     }
   },
-  getTokenByPool: async (pair: string): Promise<TokenByPoolResult | null> => {
-    const result = await xbuddyClient.post<TokenByPoolResult>('/api/token/token-by-pool', { pa: pair })
+  getTokenByPool: async (chain: string, pa: string): Promise<TokenByPoolResult | null> => {
+    const result = await xbuddyClient.post<TokenByPoolResult>('/api/token/token-by-pool', { chain, pa })
     return result.data
   },
 }

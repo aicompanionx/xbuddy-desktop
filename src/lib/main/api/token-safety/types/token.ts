@@ -15,7 +15,7 @@ export type TokenSafetyreq = {
 export type TokenSafetyResult = {
   chain?: string
   ca?: string
-  risks?: RiskOptions
+  risks?: RiskOptions | null
 }
 
 export type TokenByPoolResult = {

@@ -9,59 +9,43 @@ export type TwitterInfoReq = {
   url: string
 }
 
-export type TwitterStatusRes = {
+export type TwitterInfo = {
   /**
-   * Classification, account classification
+   * Description, User description
    */
-  classification?: string
+  description?: null | string
   /**
-   * Cnkolfollowerscount, Chinese KOL followers count
+   * Followers count, number of followers
    */
-  cnKolFollowersCount?: number
+  followersCount?: number
   /**
-   * Deletecount, number of deleted posts
+   * Name, display name
    */
-  deleteCount?: number
+  name?: string
   /**
-   * Influencelevel, influence level
+   * Score, user score
    */
-  influenceLevel?: string
+  score?: number
   /**
-   * Iskol, whether the account is a KOL
+   * Smart followers count, smart followers count
    */
-  isKOL?: boolean
+  smartFollowersCount?: number
   /**
-   * Kolrank, KOL ranking
+   * Smart level, user smart information
    */
-  kolRank?: number
+  smartLevel?: number
   /**
-   * Message, analysis result description
+   * Smart mentions count, smart mentions count
    */
-  message?: string
+  smartMentionsCount?: number
   /**
-   * Renamecount, number of name changes
+   * Twitter URL, Twitter link
    */
-  renameCount?: number
+  twitterUrl?: string
   /**
-   * Risklevel, risk level
+   * Type, account type
    */
-  riskLevel?: string
-  /**
-   * Smartfollowers, smart followers count
-   */
-  smartFollowers?: number
-  /**
-   * Topfollowers, top followers count
-   */
-  topFollowers?: number
-  /**
-   * Url, the analyzed Twitter URL
-   */
-  url?: string
-  /**
-   * Screen Name, Twitter username
-   */
-  screenName?: string
+  type?: string
 }
 
 export type TwitterRenameRes = {
@@ -98,6 +82,6 @@ export interface RenameHistory {
 }
 
 export type TwitterAccountInfo = {
-  twitter_status?: TwitterStatusRes
+  twitter_status?: TwitterInfo
   twitter_rename_record?: TwitterRenameRes
 }

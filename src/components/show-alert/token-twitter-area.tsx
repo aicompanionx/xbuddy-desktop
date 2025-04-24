@@ -15,15 +15,12 @@ const TokenTwitterArea = () => {
     return <p className="text-sm text-red-400 mb-2">No corresponding X account found for this address</p>
 
   const twitterRenameCount = alert.twitter_status?.twitter_rename_record?.screen_names?.length || 0
-  const influenceLevel = alert.twitter_status?.twitter_status?.influenceLevel || 'Level 0'
-  const influenceScore =
-    alert.twitter_status?.twitter_status?.smartFollowers +
-      alert.twitter_status?.twitter_status?.cnKolFollowersCount +
-      alert.twitter_status?.twitter_status?.topFollowers || 0
-  const kolsFollowing = alert.twitter_status?.twitter_status?.smartFollowers?.toString() || '0'
-  const mentions24h = '32.1K' // Would come from API
-  const smartMentions = '12.1K' // Would come from API
-  const smartnessLevel = 3 // 1-3 scale, would be calculated from API data
+  const influenceLevel = alert.twitter_status?.twitter_status?.smartLevel || 'Level 0'
+  const influenceScore = alert.twitter_status?.twitter_status?.score || 0
+  const kolsFollowing = alert.twitter_status?.twitter_status?.smartFollowersCount?.toString() || '0'
+  const mentions24h = alert.twitter_status?.twitter_status?.smartMentionsCount?.toString() || '0'
+  const smartMentions = alert.twitter_status?.twitter_status?.smartMentionsCount?.toString() || '0'
+  const smartnessLevel = alert.twitter_status?.twitter_status?.smartLevel || 0
 
   console.log('twitterRenameCount', twitterRenameCount)
 

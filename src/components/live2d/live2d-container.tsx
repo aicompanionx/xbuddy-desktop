@@ -9,7 +9,7 @@ import Live2DCharacter from './live2d-character'
 import { useLive2DDrag } from '@/hooks/use-live2d-drag'
 import PhishingAlert from '@/components/ui/phishing-alert'
 import { useAlert } from '@/contexts/alert-context'
-import TokenSafetyAlert from '../features/show-alert/token-safety-alert'
+import TokenSafetyAlert from '../show-alert/token-safety-alert'
 import Live2DMenu from './live2d-menu'
 
 interface Live2DContainerProps {
@@ -117,12 +117,18 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
       <Live2DMenu isOpen={menuOpen} onClose={handleCloseMenu} leftButtons={leftButtons} rightButtons={rightButtons} />
 
       {/* Phishing alert component */}
-      <PhishingAlert alert={state.phishingAlert} isActive={state.activeAlert === 'phishing'} onClose={closeAlert} />
+      <PhishingAlert
+        alert={state.phishingAlert}
+        isActive={state.activeAlert === 'phishing'}
+        onClose={closeAlert}
+        referenceElement={containerRef}
+      />
 
       {/* Token safety alert component */}
       <TokenSafetyAlert
         alert={state.tokenSafetyAlert}
         isActive={state.activeAlert === 'tokenSafety'}
+        referenceElement={containerRef}
         onClose={closeAlert}
       />
 
