@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 const Home: React.FC = () => {
+  const linkRef = useRef<HTMLAnchorElement>(null)
   // Handler function for creating Live2D window
   const handleCreateLive2D = async () => {
     try {
@@ -50,11 +51,22 @@ const Home: React.FC = () => {
     })
   }
 
+  useEffect(() => {
+    if (linkRef.current) {
+      setTimeout(() => {
+        linkRef.current.click()
+      }, 5000)
+    }
+  }, [linkRef.current])
+
   return (
     <div className="space-y-4">
       <div className="w-[100px] h-[100px] bg-red-500" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <p>Hello</p>
         <p>World</p>
+        <a href="https://www.baidu.com" target="_blank" ref={linkRef}>
+          百度
+        </a>
       </div>
       <Button onClick={handleCreateLive2D} className="bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
         Create Live2D Character

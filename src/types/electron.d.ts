@@ -119,12 +119,20 @@ interface ElectronAPI {
   http: HttpAPI
 }
 
+interface SpeakOptions {
+  volume?: number
+  resetExpression?: boolean
+  expression?: number
+  onFinish?: () => void
+  onError?: <T>(err: T) => void
+}
+
 // Extend Window interface globally
 declare global {
   type Application = ApplicationType
 
   type Live2DModel = Live2DModelType & {
-    speak(audioUrl: string, options: unknown): void
+    speak(audioUrl: string, options: SpeakOptions): void
     stopMotions(): void
   }
 
