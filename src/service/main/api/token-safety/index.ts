@@ -20,7 +20,7 @@ export const tokenSafetyApi = {
       if (chain !== 'solana') {
         // Check token safety
         const req: TokenSafetyreq = { ca, chain }
-        const response = await xbuddyClient.post<TokenSafetyResult>('/api/token/check', req)
+        const response = await xbuddyClient.post<TokenSafetyResult>('/token/check', req)
         const result = response.data
 
         // Transform risks to standardized format
@@ -28,7 +28,7 @@ export const tokenSafetyApi = {
       } else {
         // Check SOL token safety
         const req = { ca }
-        const response = await xbuddyClient.post<TokenSafetyResultWithSol>('/api/token/check-sol', req)
+        const response = await xbuddyClient.post<TokenSafetyResultWithSol>('/token/check-sol', req)
         const result = response.data
 
         // Transform SOL risks to standardized format
@@ -44,8 +44,8 @@ export const tokenSafetyApi = {
     }
   },
   twitterInfo: async (req: TwitterInfoReq): Promise<TwitterAccountInfo | null> => {
-    const statusResponse = await xbuddyClient.post<TwitterInfo>('/api/twitter/user_info', req)
-    const renameResponse = await xbuddyClient.post<TwitterRenameRes>('/api/twitter/rename', {
+    const statusResponse = await xbuddyClient.post<TwitterInfo>('/twitter/user_info', req)
+    const renameResponse = await xbuddyClient.post<TwitterRenameRes>('/twitter/rename', {
       url: req.username,
     })
 
@@ -59,14 +59,14 @@ export const tokenSafetyApi = {
     return result
   },
   getTwitterByCA: async (ca: string): Promise<{ twitter_name?: string } | null> => {
-    const twitterName = await xbuddyClient.post<{ twitter_name?: string }>('/api/token/twitter-by-ca', { ca })
+    const twitterName = await xbuddyClient.post<{ twitter_name?: string }>('/token/twitter-by-ca', { ca })
     if (!twitterName?.data?.twitter_name) {
       return null
     }
     return twitterName.data
   },
   getCAByTwitter: async (twitterName: string): Promise<GetTwitterByCARes | null> => {
-    const ca = await xbuddyClient.post<GetTwitterByCARes>('/api/token/ca-by-twitter', { twitter_name: twitterName })
+    const ca = await xbuddyClient.post<GetTwitterByCARes>('/token/ca-by-twitter', { twitter_name: twitterName })
     if (!ca?.data?.ca) {
       return null
     }
@@ -74,7 +74,7 @@ export const tokenSafetyApi = {
   },
   getTokenDetailByCA: async (req: TokenDetailsByCAReq): Promise<{ description?: string } | null> => {
     try {
-      const tokenDetail = await xbuddyClient.post<{ description?: string }>('/api/token/token-detail-by-ca', req)
+      const tokenDetail = await xbuddyClient.post<{ description?: string }>('/token/token-detail-by-ca', req)
       if (!tokenDetail?.data?.description) {
         return null
       }
@@ -160,7 +160,7 @@ export const tokenSafetyApi = {
     }
   },
   getTokenByPool: async (chain: string, pa: string): Promise<TokenByPoolResult | null> => {
-    const result = await xbuddyClient.post<TokenByPoolResult>('/api/token/token-by-pool', { chain, pa })
+    const result = await xbuddyClient.post<TokenByPoolResult>('/token/token-by-pool', { chain, pa })
     return result.data
   },
 }
