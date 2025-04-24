@@ -1,5 +1,15 @@
 import { ReactNode, useEffect, useRef, RefObject } from 'react'
-import { FloatingArrow, Placement, arrow, flip, autoUpdate, offset, shift, useFloating } from '@floating-ui/react'
+import {
+  FloatingArrow,
+  Placement,
+  arrow,
+  flip,
+  autoUpdate,
+  offset,
+  shift,
+  useFloating,
+  OffsetOptions,
+} from '@floating-ui/react'
 import { cn } from '@/utils'
 import { CLASSNAME } from '@/constants/classname'
 
@@ -8,10 +18,11 @@ interface FloatingPopupProps {
   children: ReactNode
   referenceElement?: RefObject<HTMLElement> | null
   placement?: Placement
-  offsetDistance?: number
+  offsetDistance?: OffsetOptions
   width?: string
   backgroundColor?: string
   className?: string
+  popupClassName?: string
   darkBackgroundColor?: string
   arrowTipDistance?: number
   expandUpwards?: boolean
@@ -28,6 +39,7 @@ const FloatingPopup = ({
   backgroundColor = 'bg-white',
   darkBackgroundColor = 'dark:bg-gray-800',
   className,
+  popupClassName,
   arrowTipDistance = 1,
   expandUpwards = false,
   isNeedArrow = true,
@@ -70,7 +82,7 @@ const FloatingPopup = ({
     isActive ? 'animate-in fade-in opacity-100' : 'opacity-0 pointer-events-none',
     CLASSNAME.IGNORE_MOUSE_EVENTS,
     expandUpwards ? 'flex flex-col-reverse' : '',
-    className,
+    popupClassName,
   )
 
   useEffect(() => {
@@ -90,6 +102,7 @@ const FloatingPopup = ({
           'bg-[#E8F1FF] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
           backgroundColor,
           darkBackgroundColor,
+          className,
         )}
       >
         {children}

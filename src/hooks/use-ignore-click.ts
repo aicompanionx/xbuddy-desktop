@@ -35,10 +35,10 @@ const mouseMoveListener = (e: MouseEvent) => {
 }
 
 export const useIgnoreClick = () => {
-  useEffect(() => {
-    window.addEventListener('mousemove', mouseMoveListener)
-    return () => {
-      window.removeEventListener('mousemove', mouseMoveListener)
-    }
-  }, [])
+  // useEffect(() => {
+  //   window.addEventListener('mousemove', mouseMoveListener)
+  //   return () => {
+  //     window.removeEventListener('mousemove', mouseMoveListener)
+  //   }
+  // }, [])
 }

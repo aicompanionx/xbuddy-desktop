@@ -60,7 +60,6 @@ export const useLive2DModel = ({
 
       canvasRef.current.addEventListener('mouseenter', () => {
         speakAssetsAudio(assetsAudio.hello)
-        setExpression('tushe')
       })
     }
 

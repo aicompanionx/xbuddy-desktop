@@ -3,12 +3,14 @@ import { windowApi } from './window-api'
 import { urlSafetyApi } from './url-safety-api'
 import { httpApi } from './http-api'
 import { browserMonitorApi } from './browser-monitor-api'
+// import { autoReplyApi } from './auto-reply-api'
 
 export const electronAPI = {
   ...notificationApi,
   ...windowApi,
   ...urlSafetyApi,
   ...browserMonitorApi,
+  // ...autoReplyApi,
 
   // Map browser monitor API to expected naming convention
   startBrowserMonitoring: browserMonitorApi.startMonitoring,
