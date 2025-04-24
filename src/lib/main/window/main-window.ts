@@ -1,54 +1,57 @@
-import { BrowserWindow, app, screen } from 'electron';
-import path from 'path';
-import { handlePendingRoute } from '../notification';
-import { WINDOWS_ID } from '@/constants/windowsId';
-import { registerWindow } from './window-registry';
+import { BrowserWindow, app, screen } from 'electron'
+import path from 'path'
+import { handlePendingRoute } from '../notification'
+import { WINDOWS_ID } from '@/constants/windowsId'
+import { registerWindow } from './window-registry'
 
-const appPath = app.getAppPath();
+const appPath = app.getAppPath()
 
 export const createMainWindow = (url?: string): BrowserWindow => {
-    const windowId = WINDOWS_ID.MAIN;
-    // 获取屏幕大小
-    const primaryDisplay = screen.getPrimaryDisplay();
-    const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+  const windowId = WINDOWS_ID.MAIN
+  // 获取屏幕大小
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize
 
-    const browserWindow = new BrowserWindow({
-        width: screenWidth,
-        height: screenHeight,
-        transparent: true,
-        frame: false,
-        maximizable: false,
-        resizable: false,
-        // alwaysOnTop: true,
-        hasShadow: false,
-        webPreferences: {
-            preload: path.join(appPath, '.vite', 'build', 'preload.js'),
-            nodeIntegration: false,
-            contextIsolation: true,
-        },
-        title: `Window - ${windowId}`,
-    });
+  const browserWindow = new BrowserWindow({
+    width: screenWidth,
+    height: screenHeight,
+    transparent: true,
+    frame: false,
+    maximizable: false,
+    resizable: false,
+    // alwaysOnTop: true,
+    hasShadow: false,
+    webPreferences: {
+      preload: path.join(appPath, '.vite', 'build', 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+    title: `Window - ${windowId}`,
+  })
 
-    registerWindow(windowId, browserWindow);
+  registerWindow(windowId, browserWindow)
 
-    browserWindow.webContents.on('did-finish-load', () => {
-        handlePendingRoute(browserWindow, windowId);
+  browserWindow.webContents.on('did-finish-load', () => {
+    handlePendingRoute(browserWindow, windowId)
 
-        browserWindow.webContents.send('window-id', windowId);
-    });
+    // if (!app.isPackaged && process.env.NODE_ENV === 'development') {
+    browserWindow.webContents.openDevTools()
+    // }
 
-    if (process.env.NODE_ENV === 'development') {
-        browserWindow.loadURL(url || 'http://localhost:5173/#/live2d');
-        browserWindow.webContents.openDevTools();
-    } else {
-        browserWindow.loadFile(path.join(appPath, 'renderer/index.html'));
+    browserWindow.webContents.send('window-id', windowId)
+  })
 
-        if (url) {
-            browserWindow.loadFile(path.join(appPath, 'renderer/index.html'), {
-                hash: url.replace('http://localhost:5173', '')
-            });
-        }
+  if (process.env.NODE_ENV === 'development') {
+    browserWindow.loadURL(url || 'http://localhost:5173/#/live2d')
+  } else {
+    browserWindow.loadFile(path.join(appPath, 'renderer/index.html'))
+
+    if (url) {
+      browserWindow.loadFile(path.join(appPath, 'renderer/index.html'), {
+        hash: url.replace('http://localhost:5173', ''),
+      })
     }
+  }
 
-    return browserWindow;
-}; 
+  return browserWindow
+}

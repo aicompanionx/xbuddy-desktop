@@ -1,3 +1,2 @@
 export { useAppStore, type WindowMessage } from './app';
-
-export { setupWindowSync } from './window-sync'; 
+export { useLive2DStore } from './use-live2d-store';
