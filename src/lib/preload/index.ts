@@ -16,6 +16,7 @@ export const electronAPI = {
   getBrowserMonitoringStatus: browserMonitorApi.getStatus,
   onBrowserData: browserMonitorApi.onBrowserData,
   onUnsafeUrlDetected: browserMonitorApi.onUnsafeUrl,
+  onTokenSafetyDetected: browserMonitorApi.onTokenSafety,
 
   http: httpApi,
 }

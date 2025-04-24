@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron'
 import { UrlSafetyResult } from './url-safety-api'
+import { TokenAnalysis } from '../main/api/token-safety/types/token'
 
 /**
  * Browser monitor API exposed to renderer
@@ -49,5 +50,16 @@ export const browserMonitorApi = {
     const listener = (_event: any, data: UrlSafetyResult) => callback(data)
     ipcRenderer.on('unsafe-url-detected', listener)
     return () => ipcRenderer.removeListener('unsafe-url-detected', listener)
+  },
+
+  /**
+   * Subscribe to token safety detection events
+   * @param callback Function to call when token safety is detected
+   * @returns Function to unsubscribe
+   */
+  onTokenSafety: (callback: (data: TokenAnalysis) => void) => {
+    const listener = (_event: any, data: TokenAnalysis) => callback(data)
+    ipcRenderer.on('token-safety-detected', listener)
+    return () => ipcRenderer.removeListener('token-safety-detected', listener)
   },
 }

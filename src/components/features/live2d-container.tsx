@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, memo } from 'react'
-import { IoChatboxSharp } from 'react-icons/io5'
+import { IoChatboxSharp, IoSettingsOutline } from 'react-icons/io5'
 import { FaExchangeAlt } from 'react-icons/fa'
-import { IoSettingsOutline } from 'react-icons/io5'
 import { HiMiniSpeakerWave } from 'react-icons/hi2'
 import { RiNewspaperLine } from 'react-icons/ri'
 import { IoMdClose } from 'react-icons/io'
@@ -10,7 +9,8 @@ import Live2DCharacter from './live2d-character'
 import { useLive2DDrag } from '@/hooks/use-live2d-drag'
 import PhishingAlert from '@/components/ui/phishing-alert'
 import Live2DMenu from '@/components/ui/live2d-menu'
-import { type UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import TokenSafetyAlert from './show-alert/token-safety-alert'
+import { useAlert } from '@/contexts/alert-context'
 
 interface Live2DContainerProps {
   windowId: string
@@ -25,9 +25,10 @@ interface Live2DContainerProps {
 
 export const Live2DContainer = memo(({ windowId, modelPath, width = 300, height = 400 }: Live2DContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [unsafeAlert, setUnsafeAlert] = useState<UrlSafetyResult | null>(null)
-  const [alertVisible, setAlertVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // Use AlertContext to manage alert states
+  const { state, showPhishingAlert, showTokenSafetyAlert, closeAlert } = useAlert()
 
   // Use drag hook
   const { isDragging } = useLive2DDrag(containerRef)
@@ -45,23 +46,26 @@ export const Live2DContainer = memo(({ windowId, modelPath, width = 300, height 
   useEffect(() => {
     const unsubscribeUnsafe = window.electronAPI.onUnsafeUrlDetected((result) => {
       console.log('Unsafe URL detected:', result)
-      // Display alert with unsafe URL information
-      setUnsafeAlert(result)
-      setAlertVisible(true)
+      // Display unsafe URL alert
+      showPhishingAlert(result)
     })
 
     return () => {
       unsubscribeUnsafe()
     }
-  }, [])
+  }, [showPhishingAlert])
 
-  // Handle closing alert
-  const handleCloseAlert = () => {
-    console.log('handleCloseAlert')
-    setAlertVisible(false)
-    // Clear alert data after animation completes
-    setTimeout(() => setUnsafeAlert(null), 500)
-  }
+  // Listen for token safety notifications
+  useEffect(() => {
+    const unsubscribeTokenSafety = window.electronAPI.onTokenSafetyDetected((result) => {
+      console.log('Token safety detected:', result)
+      showTokenSafetyAlert(result)
+    })
+
+    return () => {
+      unsubscribeTokenSafety()
+    }
+  }, [showTokenSafetyAlert])
 
   const handleContainerClick = (e: React.MouseEvent) => {
     if (isDragging) return
@@ -114,7 +118,15 @@ export const Live2DContainer = memo(({ windowId, modelPath, width = 300, height 
       <Live2DMenu isOpen={menuOpen} onClose={handleCloseMenu} leftButtons={leftButtons} rightButtons={rightButtons} />
 
       {/* Phishing alert component */}
-      {unsafeAlert && <PhishingAlert alert={unsafeAlert} visible={alertVisible} onClose={handleCloseAlert} />}
+      <PhishingAlert alert={state.phishingAlert} isActive={state.activeAlert === 'phishing'} onClose={closeAlert} />
+
+      {/* Token safety alert component */}
+      <TokenSafetyAlert
+        alert={state.tokenSafetyAlert}
+        isActive={state.activeAlert === 'tokenSafety'}
+        onClose={closeAlert}
+      />
+
       <Live2DCharacter windowId={windowId} modelPath={modelPath} width={width} height={height} centerModel={true} />
     </div>
   )

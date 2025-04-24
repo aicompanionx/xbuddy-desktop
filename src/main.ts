@@ -5,7 +5,7 @@ import { createWindow, initWindowManagerIPC } from './lib/main/window'
 import { setupIpcHandlers } from './lib/main/ipc-handler'
 import { setupUrlSafetyHandlers } from './lib/main/url-safety-service'
 import { setupBrowserMonitorIPC } from './lib/main/browser-monitor-ipc'
-import { browserMonitorService } from './lib/main/browser-monitor-service'
+import { browserMonitorService } from './lib/main/browser-monitor'
 
 // Configuration
 const AUTO_START_BROWSER_MONITOR = true // Control whether browser monitoring starts automatically

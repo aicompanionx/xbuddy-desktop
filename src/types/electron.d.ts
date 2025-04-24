@@ -1,4 +1,6 @@
 import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import { TokenSafetyProps } from '@/lib/main/api/token-safety/type'
+import { TwitterAccountInfo } from '@/lib/main/api/twitter/type'
 
 interface ApiResponse<T = any> {
   success: boolean
@@ -100,6 +102,12 @@ interface ElectronAPI {
 
   // Phishing detection
   onUnsafeUrlDetected: (callback: (result: UrlSafetyResult) => void) => () => void
+
+  // Token Safety API
+  onTokenSafetyDetected: (callback: (result: TokenSafetyProps) => void) => () => void
+
+  // Twitter account detection
+  onTwitterAccountDetected: (callback: (result: TwitterAccountInfo) => void) => () => void
 
   // HTTP API (as namespace)
   http: HttpAPI

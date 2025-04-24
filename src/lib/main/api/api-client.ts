@@ -119,7 +119,7 @@ class ApiClient {
   constructor(config: ApiClientConfig = {}) {
     this.baseUrl = config.baseUrl || ''
     this.defaultHeaders = config.defaultHeaders || {}
-    this.timeout = config.timeout || 30000
+    this.timeout = config.timeout || 60000
     this.onError = config.onError
     this.onResponse = config.onResponse
   }
