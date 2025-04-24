@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppStore } from '@/store/app'
-import { Live2DContainer } from '@/components/features/live2d-container'
-
-const modelPath = `assets/live2d/shizuku/runtime/shizuku.model3.json`
+import { Live2DContainer } from '@/components/live2d/live2d-container'
 
 const Live2DPage: React.FC = () => {
   const { selectWindow } = useAppStore()
@@ -21,16 +19,7 @@ const Live2DPage: React.FC = () => {
 
   return (
     <>
-      {windowId && (
-        <Live2DContainer
-          windowId={windowId}
-          modelPath={modelPath}
-          autoResize={true}
-          width={200}
-          height={200}
-          fullscreen={true}
-        />
-      )}
+      {windowId && <Live2DContainer windowId={windowId} autoResize={true} width={500} height={500} fullscreen={true} />}
     </>
   )
 }

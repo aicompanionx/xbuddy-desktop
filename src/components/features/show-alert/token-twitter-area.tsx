@@ -4,7 +4,7 @@ import { LuBrain } from 'react-icons/lu'
 import { useAlert } from '@/contexts/alert-context'
 import TwitterRenameAlert from './twitter-rename-alert'
 
-export const TokenTwitterArea = () => {
+const TokenTwitterArea = () => {
   // Get data from token_info and twitter_status
   const { state } = useAlert()
   const alert = state.tokenSafetyAlert

@@ -34,10 +34,12 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
   // Handle mouse interactions for dragging
   useEffect(() => {
     // Start dragging when mouse is pressed on canvas
-    const handleMouseDown = (e: any) => {
-      if (e.target.parentElement === containerRef.current && containerRef.current) {
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.parentElement === containerRef.current && containerRef.current) {
         isDraggingRef.current = true;
 
+        target.style.cursor = 'grabbing'
         // Store initial mouse position
         initialMousePositionRef.current = { x: e.clientX, y: e.clientY };
 
@@ -48,7 +50,7 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
     };
 
     // Handle mouse movement - directly move canvas element
-    const handleMouseMove = (e: any) => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingRef.current && containerRef.current) {
         // Get viewport dimensions
         const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
@@ -88,9 +90,12 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
     };
 
     // End dragging when mouse is released
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
       if (isDraggingRef.current) {
         isDraggingRef.current = false;
+
+        target.style.cursor = 'grab'
       }
     };
 
