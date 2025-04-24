@@ -34,7 +34,7 @@ export const shouldAnalyzeUrl = (url: string): boolean => {
   return true
 }
 
-const addAnalyzedUrl = (url: string): void => {
+const addAnalyzedUrl = (url: string, seconds?: number): void => {
   analyzedUrls.add(url)
 
   // Limit the size of the analyzed URLs set to prevent memory leaks
@@ -44,9 +44,12 @@ const addAnalyzedUrl = (url: string): void => {
   }
 
   // Auto-clear URL from analyzed set after some time
-  setTimeout(() => {
-    analyzedUrls.delete(url)
-  }, 60 * 60 * 1000) // Remove after 1 hour to allow re-analysis
+  setTimeout(
+    () => {
+      analyzedUrls.delete(url)
+    },
+    seconds ? seconds * 1000 : 60 * 60 * 1000,
+  ) // Default remove after 1 hour to allow re-analysis
 }
 
 /**
@@ -83,7 +86,7 @@ export const analyzeUrlForPhishing = async (url: string, mainWindow: BrowserWind
  * @param mainWindow Main window reference
  */
 export const analyzeUrlForToken = async (url: string, mainWindow: BrowserWindow | null): Promise<void> => {
-  addAnalyzedUrl(url)
+  addAnalyzedUrl(url, 20)
   console.log(`Analyzing active URL for token safety: ${url}`)
 
   let tokenAnalysis: TokenAnalysis | null = null
@@ -92,8 +95,8 @@ export const analyzeUrlForToken = async (url: string, mainWindow: BrowserWindow 
       // Only analyze Twitter profile pages, not other Twitter pages
       if (isTwitterProfilePage(url)) {
         tokenAnalysis = await tokenSafetyApi.tokenAnalysisByTwitter({
-          url: url,
-          lang: 'en',
+          username: url,
+          // lang: 'en',
         })
       } else {
         console.log('Not a Twitter profile page, skipping analysis')
@@ -102,8 +105,6 @@ export const analyzeUrlForToken = async (url: string, mainWindow: BrowserWindow 
     } else {
       // Extract and normalize chain name from URL
       const { chain, tokenAddress } = analyzeUrl(url)
-
-      console.log('chain & tokenAddress', chain, tokenAddress)
 
       if (!chain || !tokenAddress) {
         console.log('Invalid chain or token address')
@@ -120,6 +121,7 @@ export const analyzeUrlForToken = async (url: string, mainWindow: BrowserWindow 
         }
       }
 
+      console.log('chain & tokenAddress', chain, tokenAddress)
       tokenAnalysis = await tokenSafetyApi.tokenAnalysisByToken({ ca: CA || tokenAddress, chain })
     }
 

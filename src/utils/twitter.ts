@@ -1,48 +1,50 @@
 import { RenameHistory } from '@/service/main/api/token-safety/types/twitter'
+import { sortRenameHistoriesByEndDate, sortRenameHistoriesByStartDate } from './time'
 
-/**
- * Sort Twitter rename history by start date from newest to oldest
- * @param histories Array of rename histories to sort
- * @returns Sorted array
- */
-export function sortRenameHistoriesByStartDate(histories: RenameHistory[]): RenameHistory[] {
-  if (!histories || !histories.length) return []
-
-  return [...histories].sort((a, b) => {
-    // Convert to Date objects to ensure proper comparison
-    const dateA = new Date(a.start_date || '')
-    const dateB = new Date(b.start_date || '')
-    // Sort descending (newest first)
-    return dateB.getTime() - dateA.getTime()
-  })
+export interface RenameEvent {
+  date: string // 2025-04-05
+  from: string // hellodoge
+  to: string // SkyAI
 }
 
 /**
- * Sort Twitter rename history by end date from newest to oldest
- * @param histories Array of rename histories to sort
- * @returns Sorted array
+ * Get the latest rename history
+ *
+ * Rules:
+ *  - If end_date is empty → It is considered that it is currently in use, return directly
+ *  - Otherwise: Return the latest record by end_date
+ *  - At the same time, name must be equal to the current name
  */
-export function sortRenameHistoriesByEndDate(histories: RenameHistory[]): RenameHistory[] {
-  if (!histories || !histories.length) return []
+export const getLatestRenameHistory = (
+  histories: readonly RenameHistory[] = [],
+  currentName?: string,
+): RenameHistory | undefined => {
+  if (!histories.length) return
 
-  return [...histories].sort((a, b) => {
-    // Convert to Date objects to ensure proper comparison
-    const dateA = new Date(a.end_date || '')
-    const dateB = new Date(b.end_date || '')
-    // Sort descending (newest first)
-    return dateB.getTime() - dateA.getTime()
-  })
+  // 1) The name that is currently in use
+  const ongoing = histories.find((h) => !h.end_date && h.name === currentName)
+  if (ongoing) return ongoing
+
+  // 2) The latest record by end_date
+  return sortRenameHistoriesByEndDate(histories).find((h) => h.name === currentName)
 }
 
-/**
- * Calculate how many times a Twitter account has changed its name
- * @param histories Array of rename histories
- * @returns Number of name changes
- */
-export function countNameChanges(histories: RenameHistory[]): number {
-  if (!histories) return 0
-  // Subtract 1 because the initial name isn't a "change"
-  return Math.max(0, histories.length - 1)
+export const buildRenameEvents = (histories: readonly RenameHistory[] = [], currentName = ''): RenameEvent[] => {
+  // Sort by start_date in descending order
+  const sorted = sortRenameHistoriesByStartDate(histories)
+
+  /**
+   *   sorted: [H0, H1, H2, ...]
+   *   Display: H0.name ← H1.name
+   *            H1.name ← H2.name
+   *            ...
+   *   The last one's "to" points to currentName
+   */
+  return sorted.map((h, idx) => ({
+    date: h.start_date ?? '',
+    from: sorted[idx + 1]?.name ?? currentName,
+    to: h.name ?? '',
+  }))
 }
 
 /**

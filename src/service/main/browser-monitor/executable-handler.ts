@@ -32,7 +32,7 @@ export const getMonitorExecutablePath = (): { execPath: string; args: string[] }
   // Determine base path for the executable
   const basePath = app.isPackaged ? path.dirname(app.getAppPath()) : app.getAppPath()
 
-  const binPath = path.join(basePath, 'src', 'lib', 'bin')
+  const binPath = path.join(basePath, 'src', 'service', 'bin')
   let execPath: string
   const args: string[] = []
 

@@ -7,7 +7,6 @@ import {
   type GetTwitterByCARes,
   type TokenAnalysis,
   type TokenByPoolResult,
-  type TokenDetailByCARes,
   type TokenDetailsByCAReq,
 } from './types/token'
 import { transformRisks, transformSolRisks } from '@/service/utils/chains'
@@ -20,7 +19,7 @@ export const tokenSafetyApi = {
     try {
       if (chain !== 'solana') {
         // Check token safety
-        const req: TokenSafetyreq = { ca, chain, lang }
+        const req: TokenSafetyreq = { ca, chain }
         const response = await xbuddyClient.post<TokenSafetyResult>('/api/token/check', req)
         const result = response.data
 
@@ -46,7 +45,11 @@ export const tokenSafetyApi = {
   },
   twitterInfo: async (req: TwitterInfoReq): Promise<TwitterAccountInfo | null> => {
     const statusResponse = await xbuddyClient.post<TwitterInfo>('/api/twitter/user_info', req)
-    const renameResponse = await xbuddyClient.post<TwitterRenameRes>('/api/twitter/rename', req)
+    const renameResponse = await xbuddyClient.post<TwitterRenameRes>('/api/twitter/rename', {
+      url: req.username,
+    })
+
+    console.log('twitterInfo', statusResponse.data, renameResponse.data)
 
     const result: TwitterAccountInfo = {
       twitter_status: statusResponse.data,
@@ -57,25 +60,25 @@ export const tokenSafetyApi = {
   },
   getTwitterByCA: async (ca: string): Promise<{ twitter_name?: string } | null> => {
     const twitterName = await xbuddyClient.post<{ twitter_name?: string }>('/api/token/twitter-by-ca', { ca })
-    if (!twitterName.data.twitter_name) {
+    if (!twitterName?.data?.twitter_name) {
       return null
     }
     return twitterName.data
   },
   getCAByTwitter: async (twitterName: string): Promise<GetTwitterByCARes | null> => {
     const ca = await xbuddyClient.post<GetTwitterByCARes>('/api/token/ca-by-twitter', { twitter_name: twitterName })
-    if (!ca.data.ca) {
+    if (!ca?.data?.ca) {
       return null
     }
-    return ca.data
+    return ca?.data
   },
-  getTokenDetailByCA: async (req: TokenDetailsByCAReq): Promise<TokenDetailByCARes | null> => {
+  getTokenDetailByCA: async (req: TokenDetailsByCAReq): Promise<{ description?: string } | null> => {
     try {
-      const tokenDetail = await xbuddyClient.post<TokenDetailByCARes>('/api/token/token-detail-by-ca', req)
-      if (!tokenDetail.data.description) {
+      const tokenDetail = await xbuddyClient.post<{ description?: string }>('/api/token/token-detail-by-ca', req)
+      if (!tokenDetail?.data?.description) {
         return null
       }
-      return tokenDetail.data
+      return tokenDetail?.data
     } catch (error) {
       console.error('Failed to fetch token detail:', error)
       return null
@@ -98,25 +101,28 @@ export const tokenSafetyApi = {
   },
   tokenAnalysisByToken: async (req: TokenDetailsByCAReq): Promise<TokenAnalysis | null> => {
     let tokenSafety: TokenSafetyProps | null = null
-    const { ca, chain, lang } = req
+    const { ca, chain } = req
+
+    console.log('tokenAnalysisByToken', ca, chain)
 
     try {
       // Get token safety info
-      tokenSafety = await tokenSafetyApi.checkTokenSafety(ca, chain, lang)
+      tokenSafety = await tokenSafetyApi.checkTokenSafety(ca, chain)
+      console.log('tokenSafety', tokenSafety)
       let twitterStatus = null
 
       // Try to get Twitter info but don't fail if not available
       try {
         const twitterName = await tokenSafetyApi.getTwitterByCA(ca)
         if (twitterName?.twitter_name) {
-          twitterStatus = await tokenSafetyApi.twitterInfo({ url: twitterName.twitter_name })
+          twitterStatus = await tokenSafetyApi.twitterInfo({ username: twitterName.twitter_name })
         }
       } catch (error) {
         console.error('Failed to fetch Twitter info:', error)
       }
 
       // Get token detail
-      const tokenDetail = await tokenSafetyApi.getTokenDetailByCA({ chain, ca, lang })
+      const tokenDetail = await tokenSafetyApi.getTokenDetailByCA({ chain, ca })
       tokenSafety.description = tokenDetail?.description
 
       return tokenSafetyApi.createTokenAnalysisResponse(tokenSafety, twitterStatus, 'token')
@@ -134,8 +140,8 @@ export const tokenSafetyApi = {
 
       // Try to get token safety info but don't fail if not available
       try {
-        if (req.url) {
-          const res = await tokenSafetyApi.getCAByTwitter(req.url)
+        if (req.username) {
+          const res = await tokenSafetyApi.getCAByTwitter(req.username)
           if (res?.ca) {
             tokenSafety = await tokenSafetyApi.checkTokenSafety(res.ca, res.chain || '')
             // Get token detail

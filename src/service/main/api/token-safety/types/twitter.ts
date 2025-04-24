@@ -2,11 +2,11 @@ export type TwitterInfoReq = {
   /**
    * Lang, reply language, default is Chinese (zh)
    */
-  lang?: string
+  // lang?: string
   /**
-   * Url, the Twitter URL to analyze
+   * username, the Twitter username to analyze
    */
-  url: string
+  username: string
 }
 
 export type TwitterInfo = {
@@ -46,6 +46,14 @@ export type TwitterInfo = {
    * Type, account type
    */
   type?: string
+  /**
+   * Mentions, mentions count
+   */
+  mentions?: number
+  /**
+   * Is verified, whether the account is verified
+   */
+  InfluenceLevel?: string
 }
 
 export type TwitterRenameRes = {

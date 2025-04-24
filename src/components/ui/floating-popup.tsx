@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, RefObject } from 'react'
-import { FloatingArrow, Placement, arrow, flip, offset, shift, useFloating } from '@floating-ui/react'
+import { FloatingArrow, Placement, arrow, flip, autoUpdate, offset, shift, useFloating } from '@floating-ui/react'
 import { cn } from '@/utils'
 import { CLASSNAME } from '@/constants/classname'
 
@@ -14,6 +14,8 @@ interface FloatingPopupProps {
   className?: string
   darkBackgroundColor?: string
   arrowTipDistance?: number
+  expandUpwards?: boolean
+  isNeedArrow?: boolean
 }
 
 const FloatingPopup = ({
@@ -27,24 +29,38 @@ const FloatingPopup = ({
   darkBackgroundColor = 'dark:bg-gray-800',
   className,
   arrowTipDistance = 1,
+  expandUpwards = false,
+  isNeedArrow = true,
 }: FloatingPopupProps) => {
   const arrowRef = useRef<SVGSVGElement>(null)
 
+  // Adjust placement based on expandUpwards preference
+  const effectivePlacement = expandUpwards
+    ? placement.includes('-')
+      ? `top${placement.slice(placement.indexOf('-'))}`
+      : 'top'
+    : placement
+
   const { refs, floatingStyles, context } = useFloating({
     open: isActive,
-    placement,
+    placement: effectivePlacement as Placement,
     middleware: [
       offset(offsetDistance),
       flip({
-        fallbackPlacements: placement.startsWith('top') ? ['bottom'] : placement.startsWith('bottom') ? ['top'] : [],
+        fallbackPlacements: effectivePlacement.startsWith('top')
+          ? ['bottom']
+          : effectivePlacement.startsWith('bottom')
+          ? ['top']
+          : [],
         crossAxis: false,
         padding: 10,
       }),
       shift({
         padding: 10,
       }),
-      arrow({ element: arrowRef }),
+      isNeedArrow && arrow({ element: arrowRef }),
     ],
+    whileElementsMounted: autoUpdate,
   })
 
   // Get base animation classes
@@ -53,6 +69,7 @@ const FloatingPopup = ({
     width,
     isActive ? 'animate-in fade-in opacity-100' : 'opacity-0 pointer-events-none',
     CLASSNAME.IGNORE_MOUSE_EVENTS,
+    expandUpwards ? 'flex flex-col-reverse' : '',
     className,
   )
 
@@ -64,13 +81,13 @@ const FloatingPopup = ({
         },
       })
     }
-  }, [referenceElement, refs.setReference])
+  }, [referenceElement, refs])
 
   return (
     <div ref={refs.setFloating} style={floatingStyles} className={animationClasses}>
       <div
         className={cn(
-          'rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
+          'bg-[#E8F1FF] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
           backgroundColor,
           darkBackgroundColor,
         )}
@@ -79,14 +96,16 @@ const FloatingPopup = ({
       </div>
 
       {/* Arrow pointing to reference */}
-      <FloatingArrow
-        ref={arrowRef}
-        context={context}
-        tipRadius={arrowTipDistance}
-        height={10}
-        fill="#fff"
-        // className={cn(backgroundColor, darkBackgroundColor)}
-      />
+      {isNeedArrow && (
+        <FloatingArrow
+          ref={arrowRef}
+          context={context}
+          tipRadius={arrowTipDistance}
+          height={10}
+          fill="#fff"
+          // className={cn(backgroundColor, darkBackgroundColor)}
+        />
+      )}
     </div>
   )
 }

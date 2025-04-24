@@ -109,34 +109,34 @@ export const normalizeChainName = (chain: string): string | null => {
  * @returns Standardized TokenSafetyProps
  */
 export const transformRisks = (result: TokenSafetyResult): TokenSafetyProps => {
-  const risks = result.risks || {}
+  const risks = result?.risks || {}
 
   return {
-    chain: result.chain,
-    ca: result.ca,
+    chain: result?.chain,
+    ca: result?.ca,
     risks: {
       /**
        * IsLiquidityPoolLocked
        */
-      risks1: !risks.selfdestruct || false,
+      risks1: risks?.selfdestruct || false,
 
       /**
        * IsHoneypotContract
        */
-      risks2: risks.is_honeypot || false,
+      risks2: risks?.is_honeypot || false,
 
       /**
        * IsContractOpenSource
        */
-      risks3: !risks.is_open_source || false,
+      risks3: risks?.is_open_source || false,
 
       /**
        * IsOwnerChangeBalance
        */
-      risks4: risks.owner_change_balance || risks.can_take_back_ownership || risks.hidden_owner || false,
+      risks4: risks?.owner_change_balance || risks?.can_take_back_ownership || risks?.hidden_owner || false,
     },
-    name: result.risks.token_name,
-    symbol: result.risks.token_symbol,
+    name: result?.risks?.token_name,
+    symbol: result?.risks?.token_symbol,
   }
 }
 
@@ -146,33 +146,33 @@ export const transformRisks = (result: TokenSafetyResult): TokenSafetyProps => {
  * @returns Standardized TokenSafetyProps
  */
 export const transformSolRisks = (result: TokenSafetyResultWithSol): TokenSafetyProps => {
-  const risks = result.risks || {}
+  const risks = result?.risks || {}
 
   return {
     chain: 'solana',
-    ca: result.ca,
+    ca: result?.ca,
     risks: {
       /**
        * Top Holders Percent
        */
-      risks1: risks.top_holders_percent * 100 || 0,
+      risks1: risks?.top_holders_percent * 100 || 0,
 
       /**
        * IsMintable
        */
-      risks2: risks.is_mintable || false,
+      risks2: risks?.is_mintable || false,
 
       /**
        * IsDefaultAccountStateBlacklisted
        */
-      risks3: risks.default_account_state === '1' || false,
+      risks3: risks?.default_account_state === '1' || false,
 
       /**
        * IsClosable
        */
-      risks4: risks.closable || risks.balance_mutable || false,
+      risks4: risks?.closable || risks?.balance_mutable || false,
     },
-    name: result.risks.name,
-    symbol: result.risks.symbol,
+    name: result?.risks?.name,
+    symbol: result?.risks?.symbol,
   }
 }

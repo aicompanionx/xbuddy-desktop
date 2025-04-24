@@ -12,22 +12,22 @@ export const createMainWindow = (url?: string): BrowserWindow => {
   const primaryDisplay = screen.getPrimaryDisplay()
   const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize
 
-    const browserWindow = new BrowserWindow({
-        width: screenWidth,
-        height: screenHeight,
-        transparent: true,
-        frame: false,
-        maximizable: false,
-        resizable: false,
-        // alwaysOnTop: true,
-        hasShadow: false,
-        webPreferences: {
-            preload: path.join(appPath, '.vite', 'build', 'preload.js'),
-            nodeIntegration: false,
-            contextIsolation: true,
-        },
-        title: `Window - ${windowId}`,
-    });
+  const browserWindow = new BrowserWindow({
+    width: screenWidth,
+    height: screenHeight,
+    transparent: true,
+    frame: false,
+    maximizable: false,
+    resizable: false,
+    alwaysOnTop: true,
+    hasShadow: false,
+    webPreferences: {
+      preload: path.join(appPath, '.vite', 'build', 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+    title: `Window - ${windowId}`,
+  })
 
   registerWindow(windowId, browserWindow)
 

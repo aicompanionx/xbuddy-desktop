@@ -9,7 +9,7 @@ export type TokenAnalysis = {
 export type TokenSafetyreq = {
   chain?: string
   ca?: string
-  lang?: string
+  // lang?: string
 }
 
 export type TokenSafetyResult = {
@@ -270,9 +270,5 @@ export interface SOLRiskOptions {
 export type TokenDetailsByCAReq = {
   chain: string
   ca: string
-  lang?: string
-}
-
-export type TokenDetailByCARes = {
-  description?: string
+  // lang?: string
 }
