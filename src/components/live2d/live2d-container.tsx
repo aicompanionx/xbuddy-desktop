@@ -6,10 +6,10 @@ import { RiNewspaperLine } from 'react-icons/ri'
 import { IoMdClose } from 'react-icons/io'
 
 import Live2DCharacter from './live2d-character'
-import { useLive2DDrag } from '@/hooks/use-live2d-drag'
+import { useLive2DDrag } from '@/pages/live2d/hooks/use-live2d-drag'
 import PhishingAlert from '@/components/ui/phishing-alert'
 import { useAlert } from '@/contexts/alert-context'
-import TokenSafetyAlert from '../features/show-alert/token-safety-alert'
+import TokenSafetyAlert from '../show-alert/token-safety-alert'
 import Live2DMenu from './live2d-menu'
 
 interface Live2DContainerProps {

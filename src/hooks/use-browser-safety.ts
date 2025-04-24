@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { UrlSafetyResult } from '../lib/preload/url-safety-api'
+import { UrlSafetyResult } from '../service/preload/url-safety-api'
 
 interface BrowserSafetyHook {
   // Monitoring state

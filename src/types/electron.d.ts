@@ -1,6 +1,6 @@
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
-import { TokenSafetyProps } from '@/lib/main/api/token-safety/type'
-import { TwitterAccountInfo } from '@/lib/main/api/twitter/type'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
+import { TokenSafetyProps } from '@/service/main/api/token-safety/types/token'
+import { TwitterAccountInfo } from '@/service/main/api/token-safety/types/twitter'
 
 import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types';
 import type { Application as ApplicationType } from 'pixi.js';
@@ -115,12 +115,22 @@ interface ElectronAPI {
   http: HttpAPI
 }
 
+interface SpeakOptions {
+  volume?: number,
+  resetExpression?: boolean,
+  expression?: number,
+  onFinish?: () => void,
+  onError?: <T>(err: T) => void,
+}
+
 // Extend Window interface globally
 declare global {
+
+
     type Application = ApplicationType;
 
     type Live2DModel = Live2DModelType & {
-        speak(audioUrl: string, options: unknown): void;
+      speak(audioUrl: string, options: SpeakOptions): void;
         stopMotions(): void;
     };
 

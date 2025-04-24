@@ -1,5 +1,5 @@
-import { TokenAnalysis } from '@/lib/main/api/token-safety/types/token'
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import { TokenAnalysis } from '@/service/main/api/token-safety/types/token'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
 
 export interface SelfManagedAlertProps<T> {
   alert: T | null
