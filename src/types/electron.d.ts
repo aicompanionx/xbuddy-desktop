@@ -1,4 +1,6 @@
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
+import { TokenSafetyProps } from '@/service/main/api/token-safety/types/token'
+import { TwitterAccountInfo } from '@/service/main/api/token-safety/types/twitter'
 
 import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types';
 import type { Application as ApplicationType } from 'pixi.js';
@@ -102,6 +104,12 @@ interface ElectronAPI {
 
   // Phishing detection
   onUnsafeUrlDetected: (callback: (result: UrlSafetyResult) => void) => () => void
+
+  // Token Safety API
+  onTokenSafetyDetected: (callback: (result: TokenSafetyProps) => void) => () => void
+
+  // Twitter account detection
+  onTwitterAccountDetected: (callback: (result: TwitterAccountInfo) => void) => () => void
 
   // HTTP API (as namespace)
   http: HttpAPI
