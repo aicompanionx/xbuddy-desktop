@@ -1,4 +1,4 @@
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
 import { xbuddyClient } from './api-client'
 import { StorageService } from './storage-service'
 

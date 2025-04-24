@@ -1,6 +1,6 @@
-import { UrlSafetyResult } from '@/lib/preload/url-safety-api'
-import { TokenSafetyProps } from '@/lib/main/api/token-safety/types/token'
-import { TwitterAccountInfo } from '@/lib/main/api/token-safety/types/twitter'
+import { UrlSafetyResult } from '@/service/preload/url-safety-api'
+import { TokenSafetyProps } from '@/service/main/api/token-safety/types/token'
+import { TwitterAccountInfo } from '@/service/main/api/token-safety/types/twitter'
 
 import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types'
 import type { Application as ApplicationType } from 'pixi.js'

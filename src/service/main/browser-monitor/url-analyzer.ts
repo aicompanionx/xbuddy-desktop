@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
 import { safetyApi } from '../api/safety-api'
 import { tokenSafetyApi } from '../api/token-safety'
-import { analyzeUrl } from '@/lib/utils/url-analyse'
+import { analyzeUrl } from '@/service/utils/url-analyse'
 import { TokenAnalysis } from '../api/token-safety/types/token'
 import { isTwitterProfilePage } from '@/utils'
 

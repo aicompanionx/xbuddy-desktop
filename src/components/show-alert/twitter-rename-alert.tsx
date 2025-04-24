@@ -4,7 +4,7 @@ import { FaExchangeAlt } from 'react-icons/fa'
 
 import { CLASSNAME } from '@/constants/classname'
 import { cn, countNameChanges, sortRenameHistoriesByStartDate } from '@/utils'
-import { TwitterAccountInfo } from '@/lib/main/api/token-safety/types/twitter'
+import { TwitterAccountInfo } from '@/service/main/api/token-safety/types/twitter'
 
 interface TwitterRenameAlertProps {
   alert: TwitterAccountInfo

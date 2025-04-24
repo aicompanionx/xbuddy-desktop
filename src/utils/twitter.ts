@@ -1,4 +1,4 @@
-import { RenameHistory } from '@/lib/main/api/token-safety/types/twitter'
+import { RenameHistory } from '@/service/main/api/token-safety/types/twitter'
 
 /**
  * Sort Twitter rename history by start date from newest to oldest

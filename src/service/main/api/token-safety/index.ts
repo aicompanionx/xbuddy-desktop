@@ -10,7 +10,7 @@ import {
   type TokenDetailByCARes,
   type TokenDetailsByCAReq,
 } from './types/token'
-import { transformRisks, transformSolRisks } from '@/lib/utils/chains'
+import { transformRisks, transformSolRisks } from '@/service/utils/chains'
 import { type TwitterAccountInfo, type TwitterInfoReq, type TwitterRenameRes, type TwitterInfo } from './types/twitter'
 
 export const tokenSafetyApi = {

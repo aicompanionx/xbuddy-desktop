@@ -3,7 +3,7 @@ import { BsShieldCheck, BsShieldX } from 'react-icons/bs'
 
 import { CLASSNAME } from '@/constants/classname'
 import { cn } from '@/utils'
-import { TokenSafetyProps } from '@/lib/main/api/token-safety/types/token'
+import { TokenSafetyProps } from '@/service/main/api/token-safety/types/token'
 
 // Mapping risk names to readable descriptions for Solana tokens
 const SOL_RISK_DESCRIPTIONS: Record<string, string> = {

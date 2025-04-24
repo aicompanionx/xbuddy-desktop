@@ -1,11 +1,11 @@
-import './lib/main/init-env'
+import './service/main/init-env'
 
 import { app, BrowserWindow } from 'electron'
-import { createWindow, initWindowManagerIPC } from './lib/main/window'
-import { setupIpcHandlers } from './lib/main/ipc-handler'
-import { setupUrlSafetyHandlers } from './lib/main/url-safety-service'
-import { setupBrowserMonitorIPC } from './lib/main/browser-monitor-ipc'
-import { browserMonitorService } from './lib/main/browser-monitor'
+import { createWindow, initWindowManagerIPC } from './service/main/window'
+import { setupIpcHandlers } from './service/main/ipc-handler'
+import { setupUrlSafetyHandlers } from './service/main/url-safety-service'
+import { setupBrowserMonitorIPC } from './service/main/browser-monitor-ipc'
+import { browserMonitorService } from './service/main/browser-monitor'
 
 // Configuration
 const AUTO_START_BROWSER_MONITOR = true // Control whether browser monitoring starts automatically
