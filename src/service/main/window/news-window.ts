@@ -6,7 +6,7 @@ import { WINDOWS_ID } from '@/constants/windowsId'
 let newsWindow: BrowserWindow | null = null
 const appPath = app.getAppPath()
 
-export function createNewsWindow(width = 1000, height = 600) {
+export function createNewsWindow(width = 1400, height = 1200) {
   newsWindow = new BrowserWindow({
     width,
     height,

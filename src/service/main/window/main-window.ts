@@ -34,9 +34,9 @@ export const createMainWindow = (url?: string): BrowserWindow => {
   browserWindow.webContents.on('did-finish-load', () => {
     handlePendingRoute(browserWindow, windowId)
 
-    // if (!app.isPackaged && process.env.NODE_ENV === 'development') {
-    //   browserWindow.webContents.openDevTools()
-    // }
+    if (!app.isPackaged && process.env.NODE_ENV === 'development') {
+      browserWindow.webContents.openDevTools()
+    }
 
     browserWindow.webContents.send('window-id', windowId)
   })

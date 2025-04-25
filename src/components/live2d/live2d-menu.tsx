@@ -23,7 +23,7 @@ export interface Live2DMenuProps {
 const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftButtons, rightButtons }) => {
   const { height } = referenceElement.current?.getBoundingClientRect() || {}
 
-  // 阻止点击菜单时关闭菜单
+  // Prevent click menu from closing
   const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
@@ -32,7 +32,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
     <AnimatePresence>
       {isOpen && (
         <div className="absolute inset-0 pointer-events-none bg-transparent text-white" onClick={handleMenuClick}>
-          {/* 左侧按钮 */}
+          {/* Left buttons */}
           <FloatingPopup
             isNeedArrow={false}
             isActive={isOpen}
@@ -102,7 +102,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             </motion.div>
           </FloatingPopup>
 
-          {/* 右侧按钮 */}
+          {/* Right buttons */}
           <FloatingPopup
             isNeedArrow={false}
             isActive={isOpen}

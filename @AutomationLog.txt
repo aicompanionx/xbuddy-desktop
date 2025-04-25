@@ -35,3 +35,5 @@
 2025-04-24 23:38:32.242 uiautomation.py[6474] Refind -> 
 2025-04-24 23:38:32.242 uiautomation.py[6474] Refind -> 
 2025-04-23 22:50:43.884 uiautomation.py[6474] Refind -> 2025-04-23 23:05:44.859 uiautomation.py[6474] Refind -> 2025-04-23 23:35:46.113 uiautomation.py[6474] Refind -> 2025-04-23 23:50:44.017 uiautomation.py[6474] Refind -> 2025-04-24 00:05:45.268 uiautomation.py[6474] Refind -> 2025-04-24 00:20:48.248 uiautomation.py[6474] Refind -> 2025-04-24 19:28:42.734 uiautomation.py[6474] Refind -> 2025-04-24 20:02:31.349 uiautomation.py[6474] Refind -> 2025-04-24 20:33:03.383 uiautomation.py[6474] Refind -> 2025-04-24 21:02:22.024 uiautomation.py[6474] Refind -> 
+2025-04-25 10:59:59.847 uiautomation.py[6474] Refind -> 2025-04-25 11:19:38.325 uiautomation.py[6474] Refind -> Find Control Timeout(10s): {ControlType: EditControl}
+2025-04-25 11:19:49.175 uiautomation.py[6474] Refind -> 

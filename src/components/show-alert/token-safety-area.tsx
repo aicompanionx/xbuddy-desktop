@@ -50,6 +50,8 @@ const TokenSafetyArea = () => {
     const renameSafe = renameCount && renameCount <= 2
     if (!isSafe || !renameSafe) {
       speakAssetsAudio('danger')
+    } else {
+      speakAssetsAudio('hello')
     }
   }, [isSafe, renameCount])
 

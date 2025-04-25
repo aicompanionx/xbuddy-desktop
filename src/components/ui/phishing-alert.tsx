@@ -32,7 +32,7 @@ const PhishingAlert = ({ alert, isActive, onClose, referenceElement }: PhishingA
     : 'Master, this is a safe website. You can continue browsing.'
 
   return (
-    <FloatingPopup isActive={isActive} referenceElement={referenceElement} placement="top" className="text-base">
+    <FloatingPopup isActive={isActive} referenceElement={referenceElement} placement="top" className="text-base w-96">
       <div className="flex items-start space-x-3">
         {alert.isPhishing && <ShieldAlert className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />}
         {!alert.isPhishing && <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />}
