@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MenuButton from './live2d-menu-button'
-import FloatingPopup from '../ui/floating-popup'
+import FloatingPopup from '@/components/ui/floating-popup'
 import { cn } from '@/utils'
 
 export interface Live2DMenuProps {

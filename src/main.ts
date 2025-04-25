@@ -22,7 +22,7 @@ app.whenReady().then(() => {
   setupIpcHandlers()
 
   // Set up URL safety service listeners
-  setupUrlSafetyHandlers()
+  // setupUrlSafetyHandlers()
 
   // Initialize window manager IPC events
   initWindowManagerIPC()

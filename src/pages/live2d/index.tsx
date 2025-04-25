@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppStore } from '@/store/app'
-import { Live2DContainer } from '@/components/live2d/live2d-container'
+import { Live2DContainer } from '@/pages/live2d/components/live2d-container'
 
 const Live2DPage: React.FC = () => {
   const { selectWindow } = useAppStore()

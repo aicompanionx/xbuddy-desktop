@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLive2DModel } from '../../pages/live2d/hooks/use-live2d-model'
+import { useLive2DModel } from '../hooks/use-live2d-model'
 import { CLASSNAME } from '@/constants/classname'
 
 interface Live2DCharacterProps {
