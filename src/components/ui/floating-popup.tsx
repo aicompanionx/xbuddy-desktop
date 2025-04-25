@@ -1,5 +1,15 @@
 import { ReactNode, useEffect, useRef, RefObject } from 'react'
-import { FloatingArrow, Placement, arrow, flip, autoUpdate, offset, shift, useFloating } from '@floating-ui/react'
+import {
+  FloatingArrow,
+  Placement,
+  arrow,
+  flip,
+  autoUpdate,
+  offset,
+  shift,
+  useFloating,
+  OffsetOptions,
+} from '@floating-ui/react'
 import { cn } from '@/utils'
 import { CLASSNAME } from '@/constants/classname'
 
@@ -8,9 +18,12 @@ interface FloatingPopupProps {
   children?: ReactNode
   referenceElement?: RefObject<HTMLElement> | null
   placement?: Placement
-  offsetDistance?: number
+  offsetDistance?: OffsetOptions
+  width?: string
+  backgroundColor?: string
   className?: string
   popupClassName?: string
+  darkBackgroundColor?: string
   arrowTipDistance?: number
   expandUpwards?: boolean
   isNeedArrow?: boolean
@@ -83,6 +96,7 @@ const FloatingPopup = ({
       <div
         className={cn(
           'bg-[#fff] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
+          'bg-[#E8F1FF] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
           className,
         )}
       >
