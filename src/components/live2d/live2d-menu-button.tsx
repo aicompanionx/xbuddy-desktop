@@ -16,9 +16,9 @@ const MenuButton: React.FC<MenuButtonProps> = ({ onClick, color, icon, className
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
-        color,
+        'w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer bg-gray-500 shadow-lg',
         className,
+        color,
         CLASSNAME.IGNORE_MOUSE_EVENTS,
       )}
       onClick={onClick}

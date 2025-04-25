@@ -6,6 +6,7 @@ import { setupIpcHandlers } from './service/main/ipc-handler'
 import { setupUrlSafetyHandlers } from './service/main/url-safety-service'
 import { setupBrowserMonitorIPC } from './service/main/browser-monitor-ipc'
 import { browserMonitorService } from './service/main/browser-monitor'
+// import { initAutoReplyModule } from './service/main/auto_reply'
 
 // Configuration
 const AUTO_START_BROWSER_MONITOR = true // Control whether browser monitoring starts automatically
@@ -25,6 +26,9 @@ app.whenReady().then(() => {
 
   // Initialize window manager IPC events
   initWindowManagerIPC()
+
+  // Initialize auto reply module
+  // initAutoReplyModule()
 
   // Create main window
   const mainWindow = createWindow()
