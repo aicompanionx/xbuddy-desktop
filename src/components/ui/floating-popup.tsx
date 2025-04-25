@@ -26,7 +26,7 @@ const FloatingPopup = ({
   popupClassName,
   arrowTipDistance = 1,
   expandUpwards = false,
-  isNeedArrow = true,
+  isNeedArrow = false,
 }: FloatingPopupProps) => {
   const arrowRef = useRef<SVGSVGElement>(null)
 

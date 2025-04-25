@@ -11,6 +11,7 @@ import PhishingAlert from '@/components/ui/phishing-alert'
 import { useAlert } from '@/contexts/alert-context'
 import TokenSafetyAlert from '../show-alert/token-safety-alert'
 import Live2DMenu from './live2d-menu'
+import NewsAlert from '../show-alert/news-alert'
 
 interface Live2DContainerProps {
   windowId: string
@@ -102,7 +103,9 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
     },
     {
       color: 'bg-indigo-500 hover:bg-indigo-600',
-      onClick: () => console.log('Voice button clicked'),
+      onClick: () => {
+        handleCloseMenu()
+      },
       icon: <RiNewspaperLine size={20} />,
     },
     {
@@ -131,6 +134,9 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
         referenceElement={containerRef}
         onClose={closeAlert}
       />
+
+      {/* News alert component */}
+      <NewsAlert referenceElement={containerRef} />
 
       <Live2DCharacter windowId={windowId} width={width} height={height} centerModel={true} />
     </div>

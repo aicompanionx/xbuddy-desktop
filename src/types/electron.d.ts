@@ -55,6 +55,8 @@ interface ElectronAPI {
 
   // Live2D window
   createLive2DWindow: (options: { width?: number; height?: number; hash?: string }) => Promise<number>
+  // News window
+  createNewsWindow: (options: { width?: number; height?: number }) => Promise<number>
   setWindowPosition: (options: { windowId: string; x: number; y: number }) => void
   getWindowPosition: (windowId: string) => Promise<{ x: number; y: number }>
 
