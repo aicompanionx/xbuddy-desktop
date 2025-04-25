@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { IoStop } from 'react-icons/io5'
 import { cn } from '@/utils'

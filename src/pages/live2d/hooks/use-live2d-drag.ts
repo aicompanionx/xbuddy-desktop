@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => {
   const isDraggingRef = useRef(false)
+  const [isDraggingMenu, setIsDraggingMenu] = useState(false)
   const initialMousePositionRef = useRef({ x: 0, y: 0 })
   const translatePositionRef = useRef({ x: 0, y: 0 })
 
@@ -37,7 +38,7 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
       const target = e.target as HTMLElement
       if (target.parentElement === containerRef.current && containerRef.current) {
         isDraggingRef.current = true;
-
+        setIsDraggingMenu(false)
         target.style.cursor = 'grabbing'
         // Store initial mouse position
         initialMousePositionRef.current = { x: e.clientX, y: e.clientY };
@@ -51,6 +52,7 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
     // Handle mouse movement - directly move canvas element
     const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingRef.current && containerRef.current) {
+        setIsDraggingMenu(true)
         // Get viewport dimensions
         const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
         const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
@@ -93,8 +95,11 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
       const target = e.target as HTMLElement
       if (isDraggingRef.current) {
         isDraggingRef.current = false;
-
         target.style.cursor = 'grab'
+      }
+
+      if (isDraggingMenu) {
+        setIsDraggingMenu(false)
       }
     };
 
@@ -116,5 +121,6 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
   return {
     isDragging: isDraggingRef.current,
     translatePosition: translatePositionRef.current,
+    isDraggingMenu: isDraggingMenu,
   }
 };
