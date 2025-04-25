@@ -29,7 +29,7 @@ const PhishingAlert = ({ alert, isActive, onClose, referenceElement }: PhishingA
 
   const message = alert?.isPhishing
     ? 'Master, this is a dangerous website that might steal your funds. Close it immediately!'
-    : 'Master, this is a safe website. You can continue browsing.'
+    : 'Master, this is a safe website. You can browse with confidence.'
 
   return (
     <FloatingPopup isActive={isActive} referenceElement={referenceElement} placement="top" className="text-base w-96">

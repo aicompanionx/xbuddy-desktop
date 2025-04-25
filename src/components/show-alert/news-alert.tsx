@@ -87,7 +87,7 @@ const NewsAlert = ({ referenceElement }: NewsAlertProps) => {
         isActive={isActive && !!latestNews}
         referenceElement={referenceElement}
         placement="top"
-        className="flex justify-between items-start"
+        className="flex justify-between items-start w-96"
       >
         <div
           className="cursor-pointer"
