@@ -4,6 +4,7 @@ import { useLive2DDrag } from '@/pages/live2d/hooks/use-live2d-drag'
 import { Live2DInputMenu } from './live2d-input-menu'
 import { Live2DAlerts } from './live2d-alerts'
 import { useAlert } from '@/contexts/alert-context'
+import NewsAlert from '../show-alert/news-alert'
 
 interface Live2DContainerProps {
   windowId: string
@@ -61,6 +62,9 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
       <Live2DAlerts containerRef={containerRef} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       <Live2DInputMenu containerRef={containerRef} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+
+      {/* News alert component */}
+      <NewsAlert referenceElement={containerRef} />
 
       <Live2DCharacter windowId={windowId} width={width} height={height} centerModel={true} />
     </div>

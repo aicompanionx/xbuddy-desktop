@@ -8,15 +8,11 @@ interface UseLive2DModelProps {
 
 const modelPath = 'assets/live2d/whitecat/model.json'
 
-export const useLive2DModel = ({
-  width,
-  height,
-}: UseLive2DModelProps) => {
+export const useLive2DModel = ({ width, height }: UseLive2DModelProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const appRef = useRef<Application | null>(null)
   const modelRef = useRef<Live2DModel | null>(null)
   const { setModel, speakAssetsAudio, assetsAudio, setExpression, assetsExpression } = useLive2DStore()
-
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -37,26 +33,25 @@ export const useLive2DModel = ({
 
       appRef.current = app
 
-      const model = await window.PIXI.live2d.Live2DModel.from(modelPath);
+      const model = await window.PIXI.live2d.Live2DModel.from(modelPath)
 
       setModel(model)
 
       modelRef.current = model
 
-      const modelWidth = model.width;
-      const modelHeight = model.height;
-      const scaleX = width / modelWidth;
-      const scaleY = height / modelHeight;
-      const scale = Math.min(scaleX, scaleY);
+      const modelWidth = model.width
+      const modelHeight = model.height
+      const scaleX = width / modelWidth
+      const scaleY = height / modelHeight
+      const scale = Math.min(scaleX, scaleY)
 
-      model.x = width / 2;
-      model.y = height / 2;
-      model.scale.set(scale);
+      model.x = width / 2
+      model.y = height / 2
+      model.scale.set(scale)
 
-      model.anchor.set(0.5, 0.5);
+      model.anchor.set(0.5, 0.5)
 
       app.stage.addChild(model)
-
 
       canvasRef.current.addEventListener('mouseenter', () => {
         speakAssetsAudio(assetsAudio.hello)
@@ -64,7 +59,6 @@ export const useLive2DModel = ({
     }
 
     init()
-
   }, [width, height])
 
   return {

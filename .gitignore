@@ -94,4 +94,4 @@ out/
 assets/live2d
 assets/audio
 
-src/service/bin/*
+src/service/bin

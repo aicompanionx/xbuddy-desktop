@@ -1,6 +1,13 @@
 import { ipcMain } from 'electron'
 import { createNotification } from './notification'
-import { getAllWindowIds, getWindowById, getMainWindow, createLive2DWindow, createWindow } from './window'
+import {
+  getAllWindowIds,
+  getWindowById,
+  getMainWindow,
+  createLive2DWindow,
+  createWindow,
+  createNewsWindow,
+} from './window'
 import { ApiResponse, RequestOptions } from './api/api-client'
 import { browserMonitorService } from './browser-monitor'
 
@@ -103,6 +110,12 @@ export const setupIpcHandlers = () => {
   // Listen for create Live2D window requests
   ipcMain.handle('create-live2d-window', (_event, { width, height }) => {
     const window = createLive2DWindow(width, height)
+    return window.id
+  })
+
+  // Listen for create News window requests
+  ipcMain.handle('create-news-window', (_event, { width, height }) => {
+    const window = createNewsWindow(width, height)
     return window.id
   })
 

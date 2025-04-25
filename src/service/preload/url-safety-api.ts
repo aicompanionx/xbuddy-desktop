@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron'
-import { TwitterAccountInfo } from '../main/api/twitter/type'
 
 /**
  * URL safety check result interface

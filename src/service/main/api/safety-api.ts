@@ -15,8 +15,9 @@ const CACHE_MAX_AGE = 24 * 60 * 60 * 1000
  * @returns Safety check result
  */
 export const checkUrlSafety = async (url: string, forceRefresh = false, lang = 'en'): Promise<UrlSafetyResult> => {
+  const message = urlSafetyStorage.get<UrlSafetyResult>(url)?.message
   // First check persistent cache (if not forcing refresh)
-  if (!forceRefresh && urlSafetyStorage.has(url)) {
+  if (!forceRefresh && urlSafetyStorage.has(url) && !!message) {
     const cachedResult = urlSafetyStorage.get<UrlSafetyResult>(url)
     console.log('cachedResult', cachedResult)
 
@@ -32,7 +33,7 @@ export const checkUrlSafety = async (url: string, forceRefresh = false, lang = '
   let result: UrlSafetyResult
   try {
     // Call safety API service
-    const response = await xbuddyClient.post<UrlSafetyResult>('/api/check-phishing', {
+    const response = await xbuddyClient.post<UrlSafetyResult>('/check-phishing', {
       url,
       lang,
     })
@@ -56,7 +57,7 @@ export const checkUrlSafety = async (url: string, forceRefresh = false, lang = '
     result = {
       url,
       isPhishing: false,
-      message: 'Error checking URL safety: ' + (error instanceof Error ? error.message : String(error)),
+      message: null,
       timestamp: Date.now(),
     }
 

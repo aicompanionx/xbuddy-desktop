@@ -15,7 +15,7 @@ import { CLASSNAME } from '@/constants/classname'
 
 interface FloatingPopupProps {
   isActive: boolean
-  children: ReactNode
+  children?: ReactNode
   referenceElement?: RefObject<HTMLElement> | null
   placement?: Placement
   offsetDistance?: OffsetOptions
@@ -35,14 +35,11 @@ const FloatingPopup = ({
   referenceElement,
   placement = 'top',
   offsetDistance = 0,
-  width = 'w-max',
-  backgroundColor = 'bg-white',
-  darkBackgroundColor = 'dark:bg-gray-800',
   className,
   popupClassName,
   arrowTipDistance = 1,
   expandUpwards = false,
-  isNeedArrow = true,
+  isNeedArrow = false,
 }: FloatingPopupProps) => {
   const arrowRef = useRef<SVGSVGElement>(null)
 
@@ -78,7 +75,6 @@ const FloatingPopup = ({
   // Get base animation classes
   const animationClasses = cn(
     'z-50 transition-opacity duration-300',
-    width,
     isActive ? 'animate-in fade-in opacity-100' : 'opacity-0 pointer-events-none',
     CLASSNAME.IGNORE_MOUSE_EVENTS,
     expandUpwards ? 'flex flex-col-reverse' : '',
@@ -99,9 +95,8 @@ const FloatingPopup = ({
     <div ref={refs.setFloating} style={floatingStyles} className={animationClasses}>
       <div
         className={cn(
+          'bg-[#fff] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
           'bg-[#E8F1FF] dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700',
-          backgroundColor,
-          darkBackgroundColor,
           className,
         )}
       >

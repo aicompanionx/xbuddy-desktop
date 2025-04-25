@@ -1,12 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BsShieldCheck, BsShieldX } from 'react-icons/bs'
+
 import TokenSafetyDetails from './token-safety-details'
 import { useAlert } from '@/contexts/alert-context'
+import { useLive2DStore } from '@/store'
+import { cn } from '@/utils'
 
 const TokenSafetyArea = () => {
   const [showDetails, setShowDetails] = useState(false)
   const [showMoreNarrative, setShowMoreNarrative] = useState(false)
   const { state } = useAlert()
+  const { speakAssetsAudio } = useLive2DStore()
+  const referenceElement = useRef<HTMLDivElement>(null)
+
   const alert = state.tokenSafetyAlert
 
   if (!alert?.token_info) return <p className="text-sm text-red-400 mt-2">No related token found for this URL</p>
@@ -38,34 +44,34 @@ const TokenSafetyArea = () => {
 
   // Mock narrative
   const tokenNarrative = alert?.token_info?.description
+  const renameCount = alert?.twitter_status?.twitter_rename_record?.screen_names?.length || null
+
+  useEffect(() => {
+    const renameSafe = renameCount && renameCount <= 2
+    if (!isSafe || !renameSafe) {
+      speakAssetsAudio('danger')
+    }
+  }, [isSafe, renameCount])
 
   return (
     <div className="mt-2">
       {/* Safety Status */}
-      <div className="text-sm flex items-center gap-2">
+      <div className="text-sm flex items-center gap-2" ref={referenceElement}>
         <span className="font-medium">Token Safety:</span>
         <div className="flex items-center gap-1">
-          {isSafe ? (
-            <>
+          <>
+            {isSafe ? (
               <BsShieldCheck className="text-green-500 h-5 w-5" />
-              <button
-                className="text-green-500 underline font-bold cursor-pointer"
-                onClick={() => setShowDetails(!showDetails)}
-              >
-                {score}/{total}
-              </button>
-            </>
-          ) : (
-            <>
+            ) : (
               <BsShieldX className="text-red-500 h-5 w-5" />
-              <button
-                className="text-red-500 underline font-bold cursor-pointer"
-                onClick={() => setShowDetails(!showDetails)}
-              >
-                {score}/{total}
-              </button>
-            </>
-          )}
+            )}
+            <button
+              className={cn('text-green-500 underline font-bold cursor-pointer', !isSafe && 'text-red-500')}
+              onClick={() => setShowDetails(!showDetails)}
+            >
+              {score}/{total}
+            </button>
+          </>
         </div>
       </div>
 
@@ -86,7 +92,12 @@ const TokenSafetyArea = () => {
 
       {/* Token Safety Details Panel */}
       {showDetails && (
-        <TokenSafetyDetails alert={alert.token_info} showDetails={showDetails} setShowDetails={setShowDetails} />
+        <TokenSafetyDetails
+          alert={alert.token_info}
+          showDetails={showDetails}
+          setShowDetails={setShowDetails}
+          referenceElement={referenceElement}
+        />
       )}
     </div>
   )

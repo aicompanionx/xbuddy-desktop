@@ -9,5 +9,10 @@ export interface SelfManagedAlertProps<T> {
   referenceElement?: RefObject<HTMLElement> | null
 }
 
+export interface NewsData {
+  title: string
+  content: string
+}
+
 export type PhishingAlertProps = SelfManagedAlertProps<UrlSafetyResult>
 export type TokenSafetyAlertProps = SelfManagedAlertProps<TokenAnalysis>

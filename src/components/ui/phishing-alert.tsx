@@ -1,22 +1,44 @@
 import { ShieldAlert, ShieldCheck, X } from 'lucide-react'
+import { useEffect } from 'react'
+
 import { cn } from '@/utils'
 import { PhishingAlertProps } from '../../types/alert'
 import FloatingPopup from './floating-popup'
+import { useLive2DStore } from '@/store'
+import NoticeAlert from '../show-alert/notice-alert'
 
 const PhishingAlert = ({ alert, isActive, onClose, referenceElement }: PhishingAlertProps) => {
-  // If alert is null, don't render anything
-  if (!alert) return null
+  const { speakAssetsAudio } = useLive2DStore()
 
-  const message = alert?.message || 'This is a dangerous website that might steal your funds. Close it immediately!'
+  const speakDanger = () => {
+    speakAssetsAudio('danger')
+  }
+  useEffect(() => {
+    if (alert?.isPhishing || !alert?.message) {
+      speakDanger()
+    }
+  }, [alert?.isPhishing, alert?.message])
+
+  // If alert is null, don't render anything
+  if (!alert || !alert.message)
+    return (
+      <NoticeAlert isActive={isActive} referenceElement={referenceElement}>
+        <div>Master, I couldn't find the security information for this website, please be cautious!</div>
+      </NoticeAlert>
+    )
+
+  const message = alert?.isPhishing
+    ? 'Master, this is a dangerous website that might steal your funds. Close it immediately!'
+    : 'Master, this is a safe website. You can continue browsing.'
 
   return (
-    <FloatingPopup isActive={isActive} referenceElement={referenceElement} placement="top" width="w-max max-w-xs">
+    <FloatingPopup isActive={isActive} referenceElement={referenceElement} placement="top" className="text-base">
       <div className="flex items-start space-x-3">
         {alert.isPhishing && <ShieldAlert className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />}
         {!alert.isPhishing && <ShieldCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />}
 
         <div className="flex-1">
-          <p className="text-sm text-gray-800 dark:text-gray-200">{message}</p>
+          <p className="text-gray-800 dark:text-gray-200">{message}</p>
         </div>
 
         <button
