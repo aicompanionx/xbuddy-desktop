@@ -19,7 +19,7 @@ export const createMainWindow = (url?: string): BrowserWindow => {
     frame: false,
     maximizable: false,
     resizable: false,
-    alwaysOnTop: true,
+    // alwaysOnTop: true,
     hasShadow: false,
     webPreferences: {
       preload: path.join(appPath, '.vite', 'build', 'preload.js'),
