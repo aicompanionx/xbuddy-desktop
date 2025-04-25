@@ -17,7 +17,6 @@ export const Live2DAlerts = ({ containerRef, menuOpen, setMenuOpen }: Live2DAler
   useEffect(() => {
     const unsubscribeUnsafe = window.electronAPI.onUnsafeUrlDetected((result) => {
       console.log('Unsafe URL detected:', result)
-      // 显示警告并关闭菜单
       showPhishingAlert(result)
       setMenuOpen(false)
     })
@@ -31,7 +30,6 @@ export const Live2DAlerts = ({ containerRef, menuOpen, setMenuOpen }: Live2DAler
   useEffect(() => {
     const unsubscribeTokenSafety = window.electronAPI.onTokenSafetyDetected((result) => {
       console.log('Token safety detected:', result)
-      // 显示警告并关闭菜单
       showTokenSafetyAlert(result)
       setMenuOpen(false)
     })
