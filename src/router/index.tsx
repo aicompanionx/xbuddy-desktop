@@ -5,6 +5,8 @@ import { routes } from './routes'
 import { useAppStore } from '@/store/app'
 import Live2DPage from '@/pages/live2d'
 import NewsPage from '@/pages/news'
+import SettingPage from '@/pages/setting'
+import ChatPage from '@/pages/chat'
 
 const Router: React.FC = () => {
   const { selectedWindow } = useAppStore()
@@ -14,6 +16,8 @@ const Router: React.FC = () => {
       <Routes>
         <Route path="/live2d" element={<Live2DPage />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/setting" element={<SettingPage />} />
+        <Route path="/chat" element={<ChatPage />} />
 
         <Route path="/" element={<Layout />}>
           {routes.map((route) => {

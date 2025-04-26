@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react'
 import { UrlSafetyResult } from '@/service/preload/url-safety-api'
 import { TokenAnalysis } from '@/service/main/api/token-safety/types/token'
+import { useLive2DStore } from '@/store'
 
 // Define Alert types
 export type AlertType = 'phishing' | 'tokenSafety'
@@ -68,6 +69,7 @@ function alertReducer(state: AlertState, action: AlertAction): AlertState {
 // Provider component
 export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(alertReducer, initialState)
+  const { model, assetsAudio } = useLive2DStore()
 
   const showPhishingAlert = (alert: UrlSafetyResult) => {
     dispatch({ type: 'SHOW_PHISHING_ALERT', payload: alert })

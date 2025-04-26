@@ -1,17 +1,17 @@
-import React, { RefObject } from 'react'
+import React, { RefObject, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MenuButton from './live2d-menu-button'
 import FloatingPopup from '@/components/ui/floating-popup'
 import { cn } from '@/utils'
+import { useLive2DMenu } from '@/contexts/live2d-menu-context'
+import { useLive2D } from '@/contexts/live2d-context'
 
 export interface Live2DMenuProps {
-  isOpen: boolean
-  referenceElement: RefObject<HTMLElement>
-  onClose: () => void
   leftButtons?: Array<{
     color: string
     icon?: React.ReactNode
     onClick: () => void
+    ref?: React.RefObject<HTMLDivElement>
   }>
   rightButtons?: Array<{
     color: string
@@ -20,8 +20,12 @@ export interface Live2DMenuProps {
   }>
 }
 
-const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftButtons, rightButtons }) => {
-  const { height } = referenceElement.current?.getBoundingClientRect() || {}
+const Live2DMenu: React.FC<Live2DMenuProps> = ({ leftButtons, rightButtons }) => {
+  const { containerRef } = useLive2D()
+
+  const { height } = containerRef.current?.getBoundingClientRect() || {}
+  const settingsButtonRef = useRef<HTMLDivElement>(null)
+  const { isMenuOpen: isOpen } = useLive2DMenu()
 
   // Prevent click menu from closing
   const handleMenuClick = (e: React.MouseEvent) => {
@@ -34,10 +38,9 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
         <div className="absolute inset-0 pointer-events-none bg-transparent text-white" onClick={handleMenuClick}>
           {/* Left buttons */}
           <FloatingPopup
-            isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="left"
             width="w-max max-w-xs"
           >
@@ -60,7 +63,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="left"
             width="w-max max-w-xs"
           >
@@ -83,7 +86,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="left"
             width="w-max max-w-xs"
           >
@@ -97,6 +100,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
               style={{
                 top: height ? `${height * 0.2}px` : 0,
               }}
+              ref={settingsButtonRef}
             >
               <MenuButton color={leftButtons[2].color} icon={leftButtons[2].icon} onClick={leftButtons[2].onClick} />
             </motion.div>
@@ -107,7 +111,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="right"
             width="w-max max-w-xs"
           >
@@ -130,7 +134,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="right"
             width="w-max max-w-xs"
           >
@@ -153,7 +157,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
             isNeedArrow={false}
             isActive={isOpen}
             className="bg-transparent shadow-none border-none"
-            referenceElement={referenceElement}
+            referenceElement={containerRef}
             placement="right"
             width="w-max max-w-xs"
           >
@@ -171,7 +175,6 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
               <MenuButton color={rightButtons[2].color} icon={rightButtons[2].icon} onClick={rightButtons[2].onClick} />
             </motion.div>
           </FloatingPopup>
-          <div className="bg-transparent shadow-none border-none"></div>
         </div>
       )}
     </AnimatePresence>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { NewsDetail, News } from '@/components/news'
+import { NewsDetail, News } from '@/pages/news/components'
 
 const NewsPage = () => {
   const [news, setNews] = useState<News | null>(null)

@@ -4,7 +4,7 @@ import { WebSocketMessage } from '../../../types/websocket'
 import { News } from './type'
 
 // News message type
-interface NewsWebSocketMessage extends WebSocketMessage {
+interface NewsWebSocketMessage extends WebSocketMessage<News | { message: string }> {
   type: 'news_update' | 'error' | string
   payload?: News | { message: string }
 }

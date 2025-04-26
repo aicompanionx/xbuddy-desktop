@@ -272,3 +272,16 @@ export type TokenDetailsByCAReq = {
   ca: string
   // lang?: string
 }
+
+
+export type TokenDetail = {
+  symbol: string
+  id: string
+  name: string
+  platform: string
+  categories: string[]
+  description: string
+  public_notice: string
+  twitter_url: string
+  logo_url: string
+}

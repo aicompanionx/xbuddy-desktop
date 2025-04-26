@@ -1,9 +1,10 @@
 import { UrlSafetyResult } from '@/service/preload/url-safety-api'
-import { TokenAnalysis } from '@/service/main/api/token-safety/types/token'
+import { TokenAnalysis, TokenDetail } from '@/service/main/api/token-safety/types/token'
 import { TwitterAccountInfo } from '@/service/main/api/token-safety/types/twitter'
 
 import type { Live2DModel as Live2DModelType } from 'pixi-live2d-display/types'
 import type { Application as ApplicationType } from 'pixi.js'
+import { TwitterRaidExecutionResult, TwitterRaidRequest, TwitterRaidResponse, TwitterRaidStatus } from '@/service/preload/twitter-raid-api'
 interface ApiResponse<T> {
   success: boolean
   data?: T
@@ -48,11 +49,12 @@ interface ElectronAPI {
   getAllWindows: () => Promise<string[]>
   sendMessageToWindow: (windowId: string, channel: string, data: unknown) => void
   sendToWindow: (options: { windowId: number; channel: string; data: unknown }) => void
+  sendMessageToAllWindows: (channel: string, data: unknown) => void
   onWindowMessage: (channel: string, callback: (data: unknown) => void) => () => void
   getWindowType: () => Promise<string>
   toggleIgnoreMouseEvents: (options: { ignore: boolean; windowId: string; forward: boolean }) => void
   moveWindow: (options: { windowId: string; x: number; y: number }) => void
-
+  createChatWindow: () => Promise<number>
   // Live2D window
   createLive2DWindow: (options: { width?: number; height?: number; hash?: string }) => Promise<number>
   // News window
@@ -117,6 +119,19 @@ interface ElectronAPI {
   // Twitter account detection
   onTwitterAccountDetected: (callback: (result: TwitterAccountInfo) => void) => () => void
 
+  // Twitter Raid API
+  getTokenChain: (ca: string) => Promise<{ chain: string }>
+  pushRaid: (request: TwitterRaidRequest) => Promise<TwitterRaidResponse | null>
+  getTokenDetail: (ca: string, chain: string) => Promise<TokenDetail | null>
+  stopRaid: () => Promise<{ success: boolean; message: string }>
+  executeRaid: (response: TwitterRaidResponse) => Promise<TwitterRaidExecutionResult | null>
+  loginContinue: () => Promise<{ success: boolean; message: string }>
+  onRaidStatus: (callback: (result: TwitterRaidStatus) => void) => () => void
+  onLoginNeed: (callback: (result: TwitterRaidStatus) => void) => () => void
+
+  // Setting window
+  createSettingWindow: () => Promise<number>
+
   // HTTP API (as namespace)
   http: HttpAPI
 }
@@ -134,7 +149,7 @@ declare global {
   type Application = ApplicationType
 
   type Live2DModel = Live2DModelType & {
-    speak(audioUrl: string, options: SpeakOptions): void
+    speak(audioUrl: string, options?: SpeakOptions): void
     stopMotions(): void
   }
 
@@ -147,7 +162,7 @@ declare global {
 
     PIXI: {
       Application: ApplicationType & {
-        new (options: unknown): ApplicationType
+        new(options: unknown): ApplicationType
       }
       live2d: {
         Live2DModel: Live2DModelStatic

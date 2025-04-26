@@ -1,25 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { useAppStore } from '@/store/app'
 import { Live2DContainer } from '@/pages/live2d/components/live2d-container'
+import { Live2DMenuContextProvider } from '@/contexts/live2d-menu-context'
+import { Live2DProvider } from '@/contexts/live2d-context'
 
 const Live2DPage: React.FC = () => {
-  const { selectWindow } = useAppStore()
-  const [windowId, setWindowId] = useState<string>('')
-
-  // Get window ID and update app state
-  useEffect(() => {
-    const cleanup = window.electronAPI.onWindowId((id: string) => {
-      setWindowId(id)
-      console.log('Live2D Window ID:', id)
-      selectWindow(id)
-    })
-
-    return cleanup
-  }, [selectWindow])
-
   return (
     <>
-      {windowId && <Live2DContainer windowId={windowId} autoResize={true} width={300} height={500} fullscreen={true} />}
+      <Live2DMenuContextProvider>
+        <Live2DProvider>
+          <Live2DContainer />
+        </Live2DProvider>
+      </Live2DMenuContextProvider>
     </>
   )
 }

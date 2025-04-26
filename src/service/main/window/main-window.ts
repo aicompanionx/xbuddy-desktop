@@ -8,25 +8,26 @@ const appPath = app.getAppPath()
 
 export const createMainWindow = (url?: string): BrowserWindow => {
   const windowId = WINDOWS_ID.MAIN
-  // 获取屏幕大小
+  // Get screen size
   const primaryDisplay = screen.getPrimaryDisplay()
   const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize
 
   const browserWindow = new BrowserWindow({
     width: screenWidth,
     height: screenHeight,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#00000000',
     frame: false,
     maximizable: false,
     resizable: false,
-    // alwaysOnTop: true,
+    alwaysOnTop: true,
     hasShadow: false,
     webPreferences: {
       preload: path.join(appPath, '.vite', 'build', 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
     },
-    title: `Window - ${windowId}`,
+    title: `Xbuddy`,
   })
 
   registerWindow(windowId, browserWindow)

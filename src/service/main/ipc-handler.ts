@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import { createNotification } from './notification'
 import {
   getAllWindowIds,
@@ -13,6 +13,8 @@ import { browserMonitorService } from './browser-monitor'
 
 // Import internal HTTP request function
 import fetch, { RequestInit } from 'node-fetch'
+import { createSettingWindow } from './window/setting-window'
+import { createChatWindow } from './window/chat-window'
 
 /**
  * Send HTTP request
@@ -107,6 +109,13 @@ export const setupIpcHandlers = () => {
     }
   })
 
+  // Listen for send message to all windows requests
+  ipcMain.on('send-to-all-windows', (_event, { channel, data }) => {
+    BrowserWindow.getAllWindows().forEach(window => {
+      window.webContents.send(channel, data)
+    })
+  })
+
   // Listen for create Live2D window requests
   ipcMain.handle('create-live2d-window', (_event, { width, height }) => {
     const window = createLive2DWindow(width, height)
@@ -116,6 +125,16 @@ export const setupIpcHandlers = () => {
   // Listen for create News window requests
   ipcMain.handle('create-news-window', (_event, { width, height }) => {
     const window = createNewsWindow(width, height)
+    return window.id
+  })
+
+  ipcMain.handle('create-setting-window', () => {
+    const window = createSettingWindow()
+    return window.id
+  })
+
+  ipcMain.handle('create-chat-window', () => {
+    const window = createChatWindow()
     return window.id
   })
 
@@ -154,5 +173,12 @@ export const setupIpcHandlers = () => {
 
   ipcMain.handle('get-browser-monitoring-status', () => {
     return browserMonitorService.getStatus()
+  })
+
+  ipcMain.on('change-language', (_event, language: string) => {
+    const mainWindow = getMainWindow()
+    if (mainWindow) {
+      mainWindow.webContents.send('change-language', language)
+    }
   })
 }

@@ -22,6 +22,27 @@ const assetsAudio = {
     hello: 'hello',
     danger: 'danger',
     analysis: 'analysis',
+    rest: 'rest',
+    makemoney1: [
+        'makemoney_01',
+        'makemoney_02',
+        'makemoney_03',
+        'makemoney_04',
+        'makemoney_05',
+    ],
+    losemoney1: [
+        'losemoney_01',
+        'losemoney_02',
+        'losemoney_03',
+        'losemoney_04',
+        'losemoney_05',
+    ],
+    angry: [
+        'angry_01',
+        'angry_02',
+        'angry_03',
+        'angry_04',
+    ],
 } as const
 
 const assetsExpression = {
@@ -41,7 +62,7 @@ export const useLive2DStore = create<Live2DStore>((set, get) => ({
 
         const { model } = get();
         const { getVolume } = storageUtil()
-        const volume = getVolume()
+        const volume = getVolume() != null ? getVolume() : 1
 
         options.volume = options.volume || Number(volume);
 
@@ -65,10 +86,10 @@ export const useLive2DStore = create<Live2DStore>((set, get) => ({
         return `assets/audio/${audio}_${languageCode}.mp3`;
     },
 
-    setExpression: (expression: Live2DModelExpression) => {
+    setExpression: (exp: string) => {
         const { model } = get();
         if (model) {
-            model.expression("吐舌");
+            model.expression(exp);
         }
     },
 }))
