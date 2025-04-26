@@ -3,10 +3,9 @@ import './service/main/init-env'
 import { app, BrowserWindow } from 'electron'
 import { createWindow, initWindowManagerIPC } from './service/main/window'
 import { setupIpcHandlers } from './service/main/ipc-handler'
-import { setupUrlSafetyHandlers } from './service/main/url-safety-service'
 import { setupBrowserMonitorIPC } from './service/main/browser-monitor-ipc'
 import { browserMonitorService } from './service/main/browser-monitor'
-// import { initAutoReplyModule } from './service/main/auto_reply'
+import { setupTwitterRaidIPC } from './service/main/twitter-raid/twitter-raid-ipc'
 
 // Configuration
 const AUTO_START_BROWSER_MONITOR = true // Control whether browser monitoring starts automatically
@@ -27,8 +26,8 @@ app.whenReady().then(() => {
   // Initialize window manager IPC events
   initWindowManagerIPC()
 
-  // Initialize auto reply module
-  // initAutoReplyModule()
+  // Initialize Twitter Raid IPC
+  setupTwitterRaidIPC()
 
   // Create main window
   const mainWindow = createWindow()

@@ -15,8 +15,6 @@ const TokenSafetyArea = () => {
 
   const alert = state.tokenSafetyAlert
 
-  if (!alert?.token_info) return <p className="text-sm text-red-400 mt-2">No related token found for this URL</p>
-
   const calculateRiskScore = (risks: Record<string, boolean | string | number>, isSolana: boolean) => {
     if (!risks) return { score: 0, total: 0 }
 
@@ -54,6 +52,8 @@ const TokenSafetyArea = () => {
       speakAssetsAudio('hello')
     }
   }, [isSafe, renameCount])
+
+  if (!alert?.token_info) return <p className="text-sm text-red-400 mt-2">No related token found for this URL</p>
 
   return (
     <div className="mt-2">

@@ -6,7 +6,7 @@ import { WINDOWS_ID } from '@/constants/windowsId'
 let newsWindow: BrowserWindow | null = null
 const appPath = app.getAppPath()
 
-export function createNewsWindow(width = 1400, height = 1200) {
+export function createNewsWindow(width = 800, height = 600) {
   newsWindow = new BrowserWindow({
     width,
     height,
@@ -15,6 +15,8 @@ export function createNewsWindow(width = 1400, height = 1200) {
     alwaysOnTop: false,
     center: true,
     minimizable: true,
+    minWidth: width,
+    minHeight: height,
     maximizable: true,
     closable: true,
     webPreferences: {
@@ -22,7 +24,7 @@ export function createNewsWindow(width = 1400, height = 1200) {
       contextIsolation: true,
       preload: path.join(appPath, '.vite', 'build', 'preload.js'),
     },
-    title: `Xbuddy News`,
+    title: `News`,
   })
 
   // Create custom menu

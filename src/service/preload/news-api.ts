@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { News } from '@/components/news'
+import { News } from '@/pages/news/components'
 
 export const newsApi = {
   /**

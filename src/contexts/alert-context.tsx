@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
 import { UrlSafetyResult } from '@/service/preload/url-safety-api'
 import { TokenAnalysis } from '@/service/main/api/token-safety/types/token'
 

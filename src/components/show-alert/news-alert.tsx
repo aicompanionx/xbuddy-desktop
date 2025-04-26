@@ -69,7 +69,7 @@ const NewsAlert = ({ referenceElement }: NewsAlertProps) => {
     if (!latestNews) return
 
     // Create news window
-    window.electronAPI.createNewsWindow({ width: 1400, height: 1200 }).then(() => {
+    window.electronAPI.createNewsWindow({ width: 800, height: 600 }).then(() => {
       // Send news data to the created window
       // Use setTimeout to ensure window is ready
       setTimeout(() => {

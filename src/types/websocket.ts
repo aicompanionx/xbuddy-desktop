@@ -10,26 +10,27 @@ export enum WebSocketReadyState {
   CLOSED = 3,
 }
 
-export type WebSocketMessage = {
+export type WebSocketMessage<T> = {
   type: string
-  payload?: any
+  payload?: T
+  data?: T
 }
 
-export type WebSocketOptions = {
+export type WebSocketOptions<T> = {
   onOpen?: (event: WebSocketEventMap['open']) => void
   onClose?: (event: WebSocketEventMap['close']) => void
   onError?: (event: WebSocketEventMap['error']) => void
-  onMessage?: (message: WebSocketMessage) => void
+  onMessage?: <T>(message: T) => void
   reconnectAttempts?: number
   reconnectInterval?: number
   shouldReconnect?: boolean
   heartbeatInterval?: number
-  heartbeatMessage?: string | WebSocketMessage
+  heartbeatMessage?: string | WebSocketMessage<T>
 }
 
-export type WebSocketHookResult = {
-  sendMessage: (message: string | WebSocketMessage) => void
-  lastMessage: WebSocketMessage | null
+export type WebSocketHookResult<T> = {
+  sendMessage: (message: string | WebSocketMessage<T>) => void
+  lastMessage: WebSocketMessage<T> | null
   readyState: ReadyState
   reconnect: () => void
   getWebSocket: () => WebSocketLike | null

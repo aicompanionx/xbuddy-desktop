@@ -137,6 +137,9 @@ class ApiClient {
 
     // Ensure there's a slash between baseUrl and path
     const baseUrl = this.baseUrl.endsWith('/') ? this.baseUrl : `${this.baseUrl}/`
+    console.log("baseUrl", baseUrl);
+    console.log("path", path);
+    console.log("this.baseUrl", this.baseUrl);
     const pathWithoutLeadingSlash = path.startsWith('/') ? path.substring(1) : path
 
     return `${baseUrl}${pathWithoutLeadingSlash}`
@@ -290,8 +293,10 @@ class ApiClient {
   }
 }
 
+console.log("process.env.XBUDDY_CLIENT_API", process.env.XBUDDY_CLIENT_API);
+
 const xbuddyClient = new ApiClient({
-  baseUrl: process.env.XBUDDY_API,
+  baseUrl: process.env.XBUDDY_CLIENT_API,
 })
 
 const xbuddyAiClient = new ApiClient({

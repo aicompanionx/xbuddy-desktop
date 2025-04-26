@@ -1,10 +1,14 @@
+import { storageUtil } from "@/utils/storage";
 import { useEffect, useRef, useState } from "react";
 
 export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => {
+  const { getLive2DPosition, setLive2DPosition } = storageUtil()
+  const initPosition = getLive2DPosition({ x: 0, y: 0 })
+
   const isDraggingRef = useRef(false)
   const [isDraggingMenu, setIsDraggingMenu] = useState(false)
-  const initialMousePositionRef = useRef({ x: 0, y: 0 })
-  const translatePositionRef = useRef({ x: 0, y: 0 })
+  const initialMousePositionRef = useRef(initPosition)
+  const translatePositionRef = useRef(initPosition)
 
   // Function to parse transform translate values
   const parseTranslateValues = (element: HTMLElement): { x: number, y: number } => {
@@ -92,6 +96,9 @@ export const useLive2DDrag = (containerRef: React.RefObject<HTMLDivElement>) => 
 
     // End dragging when mouse is released
     const handleMouseUp = (e: MouseEvent) => {
+
+      setLive2DPosition(translatePositionRef.current)
+
       const target = e.target as HTMLElement
       if (isDraggingRef.current) {
         isDraggingRef.current = false;

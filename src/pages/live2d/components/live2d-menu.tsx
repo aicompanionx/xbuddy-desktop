@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import React, { RefObject, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MenuButton from './live2d-menu-button'
 import FloatingPopup from '@/components/ui/floating-popup'
@@ -7,26 +7,40 @@ import { cn } from '@/utils'
 export interface Live2DMenuProps {
   isOpen: boolean
   referenceElement: RefObject<HTMLElement>
-  onClose: () => void
   leftButtons?: Array<{
     color: string
     icon?: React.ReactNode
     onClick: () => void
+    ref?: React.RefObject<HTMLDivElement>
   }>
   rightButtons?: Array<{
     color: string
     icon?: React.ReactNode
     onClick: () => void
   }>
+  onSettingsButtonMount?: (ref: HTMLDivElement | null) => void
 }
 
-const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftButtons, rightButtons }) => {
+const Live2DMenu: React.FC<Live2DMenuProps> = ({
+  isOpen,
+  referenceElement,
+  leftButtons,
+  rightButtons,
+  onSettingsButtonMount,
+}) => {
   const { height } = referenceElement.current?.getBoundingClientRect() || {}
+  const settingsButtonRef = useRef<HTMLDivElement>(null)
 
   // Prevent click menu from closing
   const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
+
+  useEffect(() => {
+    if (onSettingsButtonMount && settingsButtonRef.current) {
+      onSettingsButtonMount(settingsButtonRef.current)
+    }
+  }, [onSettingsButtonMount, isOpen])
 
   return (
     <AnimatePresence>
@@ -97,6 +111,7 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
               style={{
                 top: height ? `${height * 0.2}px` : 0,
               }}
+              ref={settingsButtonRef}
             >
               <MenuButton color={leftButtons[2].color} icon={leftButtons[2].icon} onClick={leftButtons[2].onClick} />
             </motion.div>
@@ -171,7 +186,6 @@ const Live2DMenu: React.FC<Live2DMenuProps> = ({ isOpen, referenceElement, leftB
               <MenuButton color={rightButtons[2].color} icon={rightButtons[2].icon} onClick={rightButtons[2].onClick} />
             </motion.div>
           </FloatingPopup>
-          <div className="bg-transparent shadow-none border-none"></div>
         </div>
       )}
     </AnimatePresence>
