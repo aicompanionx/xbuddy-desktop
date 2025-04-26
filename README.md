@@ -1,50 +1,42 @@
-# XBuddy Desktop Application
+<p align="center">
+    <img src="./docs/logo.png" alt="XBuddy Logo" />
+</p>
 
-## Project Overview
+![Electron](https://img.shields.io/badge/Electron-Latest-47848F?logo=electron&logoColor=white)
+![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-Latest-3178C6?logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?logo=tailwindcss&logoColor=white)
+![NodeJS](https://img.shields.io/badge/NodeJS-18.x+-339933?logo=node.js&logoColor=white)
 
-This is a modern desktop application template based on Electron and React 19, integrating the latest front-end technology stack including TailwindCSS 4.1, shadcn UI, and React Query, providing high-performance, beautiful user interfaces and a smooth development experience.
+# 📖 About the Project <a name="about-the-project"></a>
 
-## Technology Stack
+**XBuddy** is a desktop pet application, and this repository contains its frontend implementation (based on Electron and React). The application provides user interfaces for news feeds, phishing link detection, Twitter/token analysis, AI chat, chat content recognition, and emotion reminders.
 
-- **Core Frameworks**:
-  - Electron 35+
-  - React 19
-  - TypeScript
-  - Vite 5
+## 🔑 Key Features <a name="key-features"></a>
 
-- **UI & Styling**:
-  - TailwindCSS 4.1
-  - shadcn UI
-  - Tailwind Merge
-  - Tailwind Animate
+- 📰 News Feed - Automatically fetches the latest information
+- 🎣 Phishing Link Detection - Protects users' online security
+- 🤖 AI Chat - Intelligent conversation and sentiment analysis
+- 📊 Data Analysis - Twitter/token trend tracking
 
-- **State Management & Data Fetching**:
-  - React Query (@tanstack/react-query)
-  - Zustand
+## 💻 Getting Started <a name="getting-started"></a>
 
-- **Routing**:
-  - React Router v7
+### Setup <a name="setup"></a>
 
-- **Development Tools**:
-  - pnpm
-  - ESLint
-  - Prettier
-  - Electron Forge
+1. Clone the repository
+   ```sh
+   git clone https://github.com/yourusername/xbuddy-desktop.git
+   ```
+2. Navigate to the project directory
+   ```sh
+   cd xbuddy-desktop
+   ```
+3. Install dependencies
+   ```bash
+   pnpm install
+   ```
 
-## Quick Start
-
-### Environment Requirements
-
-- Node.js 18+
-- pnpm 8+
-
-### Install Dependencies
-
-```bash
-pnpm install
-```
-
-### Development Mode
+### Usage <a name="usage"></a>
 
 Start the development server with hot reload support:
 
@@ -52,7 +44,7 @@ Start the development server with hot reload support:
 pnpm start
 ```
 
-### Build Application
+### Deployment <a name="deployment"></a>
 
 Package the application:
 
@@ -66,7 +58,7 @@ Generate distributable installer:
 pnpm make
 ```
 
-## Project Structure
+## 📂 Project Structure <a name="project-structure"></a>
 
 ```text
 electron-app/
@@ -92,14 +84,6 @@ electron-app/
 ├── vite.*.config.ts    # Vite configuration files
 └── forge.config.ts     # Electron Forge configuration
 ```
-
-## Main Features
-
-- **High-Performance Rendering**: High-performance rendering system built with React 19 and Vite
-- **Modern UI Library**: Integration of shadcn UI and TailwindCSS 4.1, providing beautiful user interfaces
-- **Type Safety**: Fully developed with TypeScript, providing type safety and intelligent suggestions
-- **Efficient State Management**: Using React Query for data fetching and caching, Zustand for global state management
-- **Build System**: Using Electron Forge to simplify the building, packaging, and distribution process
 
 ## Development Guide
 
@@ -128,3 +112,8 @@ npx shadcn-ui add [component-name]
 - Use `ipcRenderer` and `ipcMain` for inter-process communication
 - Safely expose APIs through `contextBridge`
 - Validate and sanitize all data passed via IPC
+
+
+## 📄 License <a name="license"></a>
+
+This project is licensed under the [CC BY-NC](./LICENSE) License (Creative Commons Attribution-NonCommercial).

@@ -3,6 +3,8 @@ import Home from '@/pages/home'
 import NotFound from '@/pages/not-found'
 import Live2DPage from '@/pages/live2d'
 import NewsPage from '@/pages/news'
+import SettingPage from '@/pages/setting'
+import ChatPage from '@/pages/chat'
 
 /**
  * Route item interface definition
@@ -42,6 +44,16 @@ export const routes: RouteItem[] = [
   {
     path: '/news',
     component: NewsPage,
+    hideInMenu: true,
+  },
+  {
+    path: '/setting',
+    component: SettingPage,
+    hideInMenu: true,
+  },
+  {
+    path: '/chat',
+    component: ChatPage,
     hideInMenu: true,
   },
   {

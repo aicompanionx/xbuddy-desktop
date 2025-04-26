@@ -1,26 +1,29 @@
-import React, { useRef, useState, memo, useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import Live2DCharacter from './live2d-character'
 import { useLive2DDrag } from '@/pages/live2d/hooks/use-live2d-drag'
-import { Live2DInputMenu } from './live2d-input-menu'
+import { Live2DChatAndMenu } from './live2d-chat-and-menu'
 import { Live2DAlerts } from './live2d-alerts'
 import { useAlert } from '@/contexts/alert-context'
+import { useLive2DMenu } from '@/contexts/live2d-menu-context'
+import { useLive2D } from '@/contexts/live2d-context'
+import { storageUtil } from '@/utils/storage'
+import FloatingPopup from '@/components/ui/floating-popup'
 
-interface Live2DContainerProps {
-  windowId: string
-  className?: string
-  style?: React.CSSProperties
-  width?: number
-  height?: number
-  autoResize?: boolean
-  fullscreen?: boolean
-}
+const width = 300
+const height = 500
 
-export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Live2DContainerProps) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [menuOpen, setMenuOpen] = useState(false)
+export const Live2DContainer = memo(() => {
+  const { isRaidStatusOpen, raidStatusContainerRef, inputContainerRef, containerRef } = useLive2D()
+  const { isMenuOpen, setIsMenuOpen } = useLive2DMenu()
+
+  const containerRefToAlert = isRaidStatusOpen ? raidStatusContainerRef : isMenuOpen ? inputContainerRef : containerRef
+
+  const { getLive2DPosition } = storageUtil()
+
+  const live2dPosition = getLive2DPosition({ x: 0, y: 0 })
 
   // Use drag hook
-  const { isDragging, isDraggingMenu } = useLive2DDrag(containerRef)
+  const { isDraggingMenu } = useLive2DDrag(containerRef)
   const { state, closeAlert } = useAlert()
 
   // Container style - make it completely transparent
@@ -28,7 +31,7 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
     position: 'relative',
     width: `${width}px`,
     height: `${height}px`,
-    transform: `translate(${window.innerWidth - width}px, ${window.innerHeight - height}px)`,
+    transform: `translate(${live2dPosition.x}px, ${live2dPosition.y}px)`,
     background: 'transparent',
   } as React.CSSProperties
 
@@ -38,32 +41,30 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
   }
 
   const handleContainerClick = (e: React.MouseEvent) => {
-    if (isDragging) return
     e.stopPropagation()
 
     if (state.activeAlert) {
       closeAlert()
-      return
     }
 
-    setMenuOpen(true)
+    setIsMenuOpen(true)
   }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!containerRef.current?.contains(e.target as Node)) {
-        setMenuOpen(false)
+        setIsMenuOpen(false)
       }
     }
     window.addEventListener('click', handleClickOutside)
     return () => window.removeEventListener('click', handleClickOutside)
-  }, [])
+  }, [containerRef.current, setIsMenuOpen])
 
   useEffect(() => {
-    if (isDraggingMenu && menuOpen) {
-      setMenuOpen(false)
+    if (isDraggingMenu && isMenuOpen) {
+      setIsMenuOpen(false)
     }
-  }, [isDraggingMenu, menuOpen])
+  }, [isDraggingMenu, isMenuOpen])
 
   return (
     <div
@@ -73,11 +74,17 @@ export const Live2DContainer = memo(({ windowId, width = 300, height = 400 }: Li
       onContextMenu={handleContextMenu}
       onAuxClick={handleContainerClick}
     >
-      <Live2DAlerts containerRef={containerRef} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-
-      <Live2DInputMenu containerRef={containerRef} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-
-      <Live2DCharacter windowId={windowId} width={width} height={height} centerModel={true} />
+      {/* <FloatingPopup
+        isActive={true}
+        referenceElement={containerRef}
+        className="bg-white  shadow border-none"
+        placement="top"
+      >
+        <span className="text-nowrap">Green candles everywhere! Time to activate Diamond Hands Protocol 💎🙌</span>
+      </FloatingPopup> */}
+      <Live2DAlerts containerRef={containerRefToAlert} />
+      <Live2DChatAndMenu />
+      <Live2DCharacter width={width} height={height} />
     </div>
   )
 })

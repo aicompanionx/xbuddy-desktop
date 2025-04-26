@@ -20,3 +20,6 @@ export const sortRenameHistoriesByStartDate = sortByDateDesc('start_date')
 
 /** Sort by end_date in descending order */
 export const sortRenameHistoriesByEndDate = sortByDateDesc('end_date')
+
+
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

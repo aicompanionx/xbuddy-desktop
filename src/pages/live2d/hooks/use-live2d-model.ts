@@ -1,5 +1,4 @@
 import { useLive2DStore } from '@/store'
-import { storageUtil } from '@/utils/storage'
 import { useRef, useEffect } from 'react'
 interface UseLive2DModelProps {
   width: number
@@ -12,7 +11,7 @@ export const useLive2DModel = ({ width, height }: UseLive2DModelProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const appRef = useRef<Application | null>(null)
   const modelRef = useRef<Live2DModel | null>(null)
-  const { setModel, speakAssetsAudio, assetsAudio, setExpression, assetsExpression } = useLive2DStore()
+  const { setModel, speakAssetsAudio, assetsAudio } = useLive2DStore()
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -53,13 +52,34 @@ export const useLive2DModel = ({ width, height }: UseLive2DModelProps) => {
 
       app.stage.addChild(model)
 
-      canvasRef.current.addEventListener('mouseenter', () => {
-        speakAssetsAudio(assetsAudio.hello)
-      })
+      model.expression('魔法棒')
     }
 
     init()
   }, [width, height])
+
+
+  // Tips user to rest
+  useEffect(() => {
+    const checkTime = () => {
+      const now = new Date()
+      const hours = now.getHours()
+      const minutes = now.getMinutes()
+
+      if ((hours === 23 && (minutes === 0 || minutes === 30 || minutes === 59)) ||
+        hours === 1 ||
+        hours === 2) {
+        speakAssetsAudio(assetsAudio.rest)
+
+      }
+    }
+
+    const handleTimeout = setInterval(checkTime, 30000)
+
+    return () => {
+      clearInterval(handleTimeout)
+    }
+  }, [speakAssetsAudio, assetsAudio])
 
   return {
     canvasRef,

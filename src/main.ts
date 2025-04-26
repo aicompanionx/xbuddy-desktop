@@ -3,18 +3,25 @@ import './service/main/init-env'
 import { app, BrowserWindow } from 'electron'
 import { createWindow, initWindowManagerIPC } from './service/main/window'
 import { setupIpcHandlers } from './service/main/ipc-handler'
-import { setupUrlSafetyHandlers } from './service/main/url-safety-service'
 import { setupBrowserMonitorIPC } from './service/main/browser-monitor-ipc'
 import { browserMonitorService } from './service/main/browser-monitor'
-// import { initAutoReplyModule } from './service/main/auto_reply'
+import { setupTwitterRaidIPC } from './service/main/twitter-raid/twitter-raid-ipc'
 
 // Configuration
 const AUTO_START_BROWSER_MONITOR = true // Control whether browser monitoring starts automatically
 
 // Handle squirrel events during installation
-if (require('electron-squirrel-startup')) {
-  app.quit()
+if (process.platform === 'win32') {
+  try {
+    if (require('electron-squirrel-startup')) {
+      app.quit()
+    }
+  } catch (e) {
+    console.error('electron-squirrel-startup not found, continuing anyway')
+  }
 }
+
+// app.disableHardwareAcceleration()
 
 // Called when Electron has finished initialization and is ready to create browser windows
 app.whenReady().then(() => {
@@ -27,8 +34,8 @@ app.whenReady().then(() => {
   // Initialize window manager IPC events
   initWindowManagerIPC()
 
-  // Initialize auto reply module
-  // initAutoReplyModule()
+  // Initialize Twitter Raid IPC
+  setupTwitterRaidIPC()
 
   // Create main window
   const mainWindow = createWindow()
@@ -41,6 +48,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
+
 
 // Quit the application when all windows are closed, except on macOS
 app.on('window-all-closed', async () => {

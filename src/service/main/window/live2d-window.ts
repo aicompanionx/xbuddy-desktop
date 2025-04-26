@@ -1,4 +1,4 @@
-import electron, { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app } from 'electron';
 import path from 'path';
 import { WINDOWS_ID } from '@/constants/windowsId';
 import { registerWindow, getMainWindow } from './window-registry';
@@ -12,9 +12,6 @@ const appPath = app.getAppPath();
  * @returns Created browser window
  */
 export const createLive2DWindow = (width = 300, height = 450): BrowserWindow => {
-    // Get primary display dimensions
-    const { width: screenWidth, height: screenHeight } = electron.screen.getPrimaryDisplay().workAreaSize;
-
     // Create a transparent, frameless, always-on-top window
     const browserWindow = new BrowserWindow({
         width: width,

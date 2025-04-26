@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import useWebSocketOriginal, { ReadyState } from 'react-use-websocket'
 import { WebSocketMessage, WebSocketOptions, WebSocketHookResult, WebSocketLike } from '../../types/websocket'
 
-const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHookResult => {
+const useWebSocket = <T>(url: string, options: WebSocketOptions<T> = {}): WebSocketHookResult<T> => {
   const {
     onOpen,
     onClose,
@@ -15,12 +15,12 @@ const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHoo
     heartbeatMessage = { type: 'ping' },
   } = options
 
-  const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null)
+  const [lastMessage, setLastMessage] = useState<WebSocketMessage<any> | null>(null)
   const reconnectCount = useRef(0)
   const heartbeatIntervalId = useRef<NodeJS.Timeout | null>(null)
 
   // Parse WebSocket message
-  const parseMessage = useCallback((messageEvent: MessageEvent): WebSocketMessage => {
+  const parseMessage = useCallback((messageEvent: MessageEvent): WebSocketMessage<T> => {
     try {
       return JSON.parse(messageEvent.data)
     } catch (error) {
@@ -106,7 +106,7 @@ const useWebSocket = (url: string, options: WebSocketOptions = {}): WebSocketHoo
 
   // Enhanced sendMessage function
   const sendMessage = useCallback(
-    (message: string | WebSocketMessage) => {
+    (message: string | WebSocketMessage<T>) => {
       if (typeof message === 'string') {
         sendMessageOriginal(message)
       } else {

@@ -26,6 +26,9 @@ export const startMonitorProcess = async (
     // Get the monitor program path and args
     const { execPath, args } = getMonitorExecutablePath()
 
+    console.log("execPath", execPath);
+    console.log("args", args);
+
     // If we're not using Python fallback and on non-Windows, ensure file is executable
     if (!execPath.includes('python') && process.platform !== 'win32') {
       await makeExecutable(execPath)

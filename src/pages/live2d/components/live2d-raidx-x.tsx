@@ -2,77 +2,23 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import FloatingPopup from '@/components/ui/floating-popup'
 import { useEffect, useRef, useState } from 'react'
-
-interface Live2DRaidXProps {
-  inputValue: string
-  targetUrls: string[]
-  commentList: string[]
-  isRaidStatusOpen: boolean
-  useMultipleComments: boolean
-  setInputValue: (value: string) => void
-  onClose: () => void
-  setIsRaidStatusOpen: (value: boolean) => void
-}
+import { useLive2D } from '@/contexts/live2d-context'
 
 const counts = [1, 5, 10]
 
-export const Live2DRaidX = ({
-  inputValue,
-  setInputValue,
-  setIsRaidStatusOpen,
-  onClose,
-  targetUrls,
-  commentList,
-  useMultipleComments,
-  isRaidStatusOpen,
-}: Live2DRaidXProps) => {
+export const Live2DRaidX = () => {
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isPopupOpen, setIsPopupOpen] = useState(false)
 
-  const onClickRaid = (count: number) => {
+  // Use TwitterRaid context
+  const { isRaidStatusOpen, executeRaid } = useLive2D()
+
+  const onClickRaid = async (count: number) => {
+    // Close popup
     setIsPopupOpen(false)
-    setIsRaidStatusOpen(true)
 
-    // Check if there's content to send
-    if (!inputValue.trim()) {
-      console.error('No input value')
-      return
-    }
-
-    // Prepare the payload based on whether using multiple URLs/comments
-    const payload: {
-      url?: string
-      urls?: string
-      comment?: string
-      comments?: string
-      repeat: number
-    } = {
-      repeat: count,
-    }
-
-    // Handle URLs
-    if (targetUrls.length > 1) {
-      payload.urls = targetUrls.join(',')
-    } else {
-      payload.url = targetUrls[0]
-    }
-
-    // Handle comments
-    if (useMultipleComments && commentList.length > 0) {
-      payload.comments = commentList.join(',')
-    } else {
-      payload.comment = inputValue.trim()
-    }
-
-    // Send message to main process with parameters
-    // TODO: Implement this
-
-    // Show feedback
-    console.error(`Started ${count} Raid(s) to ${targetUrls.length} URL(s)`)
-
-    // Reset input and close input box
-    setInputValue('')
-    onClose()
+    // Execute raid
+    await executeRaid(count)
   }
 
   useEffect(() => {
@@ -90,7 +36,7 @@ export const Live2DRaidX = ({
     <div ref={triggerRef} className="relative">
       {!isRaidStatusOpen && (
         <Button
-          className="text-nowrap !bg-transparent text-white hover:text-white/50 rounded-full !shadow-none !outline-none whitespace-nowrap h-8"
+          className="text-nowrap !bg-transparent text-white hover:text-white/50 rounded-full !shadow-none !outline-none whitespace-nowrap h-8 px-1"
           onClick={() => setIsPopupOpen(true)}
         >
           Raid X
@@ -109,7 +55,7 @@ export const Live2DRaidX = ({
           exit={{ opacity: 0, y: 10 }}
           className="flex w-[120px] flex-col gap-2 bg-sky-500/80 backdrop-blur-sm rounded-xl p-3 border border-white/10 shadow-lg"
         >
-          {counts.map((count, index) => (
+          {counts.map((count) => (
             <motion.div
               key={count}
               initial={{ opacity: 0, x: -10 }}

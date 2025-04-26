@@ -8,6 +8,7 @@ import {
   type TokenAnalysis,
   type TokenByPoolResult,
   type TokenDetailsByCAReq,
+  type TokenDetail
 } from './types/token'
 import { transformRisks, transformSolRisks } from '@/service/utils/chains'
 import { type TwitterAccountInfo, type TwitterInfoReq, type TwitterRenameRes, type TwitterInfo } from './types/twitter'
@@ -72,22 +73,16 @@ export const tokenSafetyApi = {
     }
     return ca?.data
   },
-  getTokenDetailByCA: async (req: TokenDetailsByCAReq): Promise<{ description?: string } | null> => {
+  getTokenDetailByCA: async (req: TokenDetailsByCAReq): Promise<TokenDetail | null> => {
     try {
-      const tokenDetail = await xbuddyClient.post<{ description?: string }>('/token/token-detail-by-ca', req)
-      if (!tokenDetail?.data?.description) {
-        return null
-      }
+      console.log(req);
+      const tokenDetail = await xbuddyClient.post<TokenDetail>('/token/token-detail-by-ca', req)
       return tokenDetail?.data
     } catch (error) {
       console.error('Failed to fetch token detail:', error)
       return null
     }
   },
-  /**
-   * Create a standard TokenAnalysis response with provided data
-   * Assemble the data you need
-   */
   createTokenAnalysisResponse: (
     tokenInfo: TokenSafetyProps | null,
     twitterInfo: TwitterAccountInfo | null,
@@ -161,6 +156,11 @@ export const tokenSafetyApi = {
   },
   getTokenByPool: async (chain: string, pa: string): Promise<TokenByPoolResult | null> => {
     const result = await xbuddyClient.post<TokenByPoolResult>('/token/token-by-pool', { chain, pa })
+    return result.data
+  },
+  getTokenChain: async (ca: string): Promise<{ chain?: string } | null> => {
+    const result = await xbuddyClient.post<{ chain?: string }>('/token/chain-by-ca', { ca })
+    console.log("result", result);
     return result.data
   },
 }

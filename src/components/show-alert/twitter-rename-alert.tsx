@@ -36,7 +36,7 @@ const TwitterRenameAlert = ({ alert, isVisible, onClose, referenceElement }: Twi
       placement="top"
       width="w-80"
       arrowTipDistance={10}
-      backgroundColor="bg-black/70"
+      className="bg-black/70"
     >
       <div className="rounded-lg shadow-lg max-w-md w-full h-full overflow-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4">

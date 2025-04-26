@@ -50,9 +50,10 @@ const FloatingPopup = ({
       : 'top'
     : placement
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, update } = useFloating({
     open: isActive,
     placement: effectivePlacement as Placement,
+    strategy: 'fixed',
     middleware: [
       offset(offsetDistance),
       flip({
@@ -83,11 +84,44 @@ const FloatingPopup = ({
 
   useEffect(() => {
     if (referenceElement?.current) {
-      refs.setReference({
+      refs.setPositionReference({
         getBoundingClientRect() {
           return referenceElement.current.getBoundingClientRect()
         },
       })
+
+      update()
+
+      const handleTransitionEnd = () => {
+        refs.setReference({
+          getBoundingClientRect() {
+            return referenceElement.current.getBoundingClientRect()
+          },
+        })
+        update()
+      }
+
+      referenceElement.current.addEventListener('transitionend', handleTransitionEnd)
+
+      const handleAnimationComplete = () => {
+        setTimeout(() => {
+          if (referenceElement?.current) {
+            refs.setReference({
+              getBoundingClientRect() {
+                return referenceElement.current.getBoundingClientRect()
+              },
+            })
+            update()
+          }
+        }, 50)
+      }
+
+      referenceElement.current.addEventListener('animationend', handleAnimationComplete)
+
+      return () => {
+        referenceElement.current?.removeEventListener('transitionend', handleTransitionEnd)
+        referenceElement.current?.removeEventListener('animationend', handleAnimationComplete)
+      }
     }
   }, [referenceElement, refs])
 

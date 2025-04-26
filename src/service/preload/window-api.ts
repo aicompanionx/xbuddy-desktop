@@ -23,19 +23,24 @@ export const windowApi = {
   },
 
   // Send message to specific window
-  sendMessageToWindow: (windowId: string, channel: string, data: any) => {
+  sendMessageToWindow: (windowId: string, channel: string, data: unknown) => {
     ipcRenderer.send('send-to-window', { windowId, channel, data })
   },
 
   // Listen for messages from other windows
-  onWindowMessage: (channel: string, callback: (data: any) => void) => {
-    const listener = (_event: Electron.IpcRendererEvent, data: any) => callback(data)
+  onWindowMessage: (channel: string, callback: (data: unknown) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, data: unknown) => callback(data)
     ipcRenderer.on(channel, listener)
 
     // Return function to clear listener
     return () => {
       ipcRenderer.removeListener(channel, listener)
     }
+  },
+
+  // Send message to all windows
+  sendMessageToAllWindows: (channel: string, data: unknown) => {
+    ipcRenderer.send('send-to-all-windows', { channel, data })
   },
 
   // Create Live2D window
@@ -46,6 +51,16 @@ export const windowApi = {
   // Create news window
   createNewsWindow: async (options: { width?: number; height?: number }) => {
     return await ipcRenderer.invoke('create-news-window', options)
+  },
+
+  // Create setting window
+  createSettingWindow: async () => {
+    return await ipcRenderer.invoke('create-setting-window')
+  },
+
+  // Create chat window
+  createChatWindow: async () => {
+    return await ipcRenderer.invoke('create-chat-window')
   },
 
   // Toggle window mouse event ignoring for click-through functionality
@@ -66,5 +81,10 @@ export const windowApi = {
   // Get current window position
   getWindowPosition: async (windowId: string): Promise<{ x: number; y: number }> => {
     return await ipcRenderer.invoke('get-window-position', { windowId })
+  },
+
+  // Close current window
+  closeCurrentWindow: () => {
+    ipcRenderer.send('close-current-window')
   },
 }
